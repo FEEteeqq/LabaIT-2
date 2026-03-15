@@ -51,9 +51,9 @@
         for (const auto& FilePath : std::filesystem::directory_iterator(FirstPath)) {
             string FileName = FilePath.path().filename().string();
             bool Flag = true;
-            cout << "1Первый цикл отработал штатно" << endl;
+            cout << "1 Первый цикл отработал штатно" << endl;
             for (const auto& TempFile : std::filesystem::directory_iterator(TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа")) {
-                cout << "1Второй цикл отработал штатно" << endl;
+                cout << "1 Второй цикл отработал штатно" << endl;
                 string TempName = TempFile.path().filename().string();
                 if (TempName == FileName) {
                     Flag = false;
@@ -68,9 +68,9 @@
         for (const auto& FilePath : std::filesystem::directory_iterator(SecondPath)) {
             string FileName = FilePath.path().filename().string();
             bool Flag = true;
-            cout << "2Первый цикл отработал штатно" << endl;
+            cout << "2 Первый цикл отработал штатно" << endl;
             for (const auto& TempFile : std::filesystem::directory_iterator(TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа")) {
-                cout << "2Второй цикл отработал штатно" << endl;
+                cout << "2 Второй цикл отработал штатно" << endl;
                 string TempName = TempFile.path().filename().string();
                 if (TempName == FileName) {
                     Flag = false;
@@ -249,13 +249,14 @@
                         }
                     }
 
-                    //Создание файла в котором будут объеденены записы из выбранных файлов
+                    //Создание файла в котором будут объеденены записи из выбранных файлов
                     else {
-                        ofstream File(TakePathToExeFile() + "\\" + "Папка с файлами\\" + NameFile + ".txt");
+                        ofstream File(TakePathToExeFile() + "\\LabaIT 2\\Выходные файлы\\" + NameFile + ".txt");
                         if (File.is_open()) {
 
                             cout << "Файл " << NameFile << " успешно создан" << endl;
                             cout << "Нажмите любую клавишу, чтобы вернуться в главное меню...";
+                            File.close();
                             _getch();
                         }
 
