@@ -3,9 +3,7 @@
 
 int main() {
 
-	setlocale(LC_ALL, "RU");
-
-    //cout << TakePathToExeFile();
+    setlocale(LC_ALL, "RU");
 
     Work();
 

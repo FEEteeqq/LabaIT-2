@@ -1,14 +1,10 @@
 #include "Header.h"
 
-#define KEY_UP 72
-#define KEY_DOWN 80
-#define KEY_RIGHT 77
-#define ESC 27
-#define ENTER 13
+
 
 void drawMenu(int selectedItem) {
 
-    vector<string> menuItems = { "1. Вывод данных в консоль", "2. Вывод данных в файл", "3. МБ добавить файл?", "4. Завершить работу программы" };
+    vector<string> menuItems = { "1. Вывод данных в консоль", "2. Вывод данных в файл", "3. Обновить списки с файлами", "4. Завершить работу программы" };
 
     system("cls");
     cout << "------ ГЛАВНОЕ МЕНЮ ------" << endl;
@@ -35,14 +31,13 @@ void drawMenu(int selectedItem) {
         return true;
         break;
     case 1: 
-        createNewFile();
+        createFile();
         return true;
         break;
     case 2:
-        cout << "Вы открыли: Пункт " << itemIndex + 1 << "!" << endl;
-        cout << "-" << endl;
-        cout << "Нажмите любую клавишу, чтобы вернуться...";
-        _getch();
+        UpdateFileNames();
+        cout << "Файлы успешно обнавленны";
+        Sleep(3000);
         return true;
         break;
     case 3:
@@ -57,10 +52,9 @@ void drawMenu(int selectedItem) {
 }
 
 void Work() {
-
-    
+    bool running = Start();
+    system("cls");
     int selected = 0;
-    bool running = true;
 
     while (running) {
         drawMenu(selected);

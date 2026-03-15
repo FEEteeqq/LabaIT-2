@@ -1,11 +1,5 @@
 #include "Header.h"
 
-#define KEY_UP 72
-#define KEY_DOWN 80
-#define KEY_RIGHT 77
-#define ESC 27
-#define ENTER 13
-
     string TakePathToExeFile() {
     char buffer[MAX_PATH];
     // NULL означает, что мы хотим получить путь текущего процесса
@@ -25,6 +19,90 @@
         return "";
     }
 }
+    string GetDesktopPath() { // Функция для получения пути до рабочего стола
+        char path[MAX_PATH];
+
+        if (SUCCEEDED(SHGetFolderPathA(NULL, CSIDL_DESKTOPDIRECTORY, NULL, 0, path))) {
+            return std::string(path);
+        }
+
+        return ""; // Возвращаем пустую строку в случае ошибки
+    }
+
+    bool CreateFolder(std::string FolderNames) { // Функция создания новой папки
+        if (_chdir((TakePathToExeFile() + "\\LabaIT 2" + "\\" + FolderNames).c_str()) != 0) /*Проверка на существования папки*/ {
+            std::string desktopPath = TakePathToExeFile();
+            std::string fullPath = desktopPath + "\\LabaIT 2" + "\\" + FolderNames; // Формируем полный путь
+            // Используем _mkdir из <direct.h> для создания папки
+            if (_mkdir(fullPath.c_str()) == 0) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }
+    
+    void UpdateFileNames() {
+
+        std::string FirstPath = GetDesktopPath() + "\\Лабараторная по ИТ\\Файлы 1 типа"; // Путь к папке с файлами 1 типа
+        std::string SecondPath = GetDesktopPath() + "\\Лабараторная по ИТ\\Файлы 2 типа"; // Путь к папке с файлами 2 типа
+
+        for (const auto& FilePath : std::filesystem::directory_iterator(FirstPath)) {
+            string FileName = FilePath.path().filename().string();
+            bool Flag = true;
+            cout << "1Первый цикл отработал штатно" << endl;
+            for (const auto& TempFile : std::filesystem::directory_iterator(TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа")) {
+                cout << "1Второй цикл отработал штатно" << endl;
+                string TempName = TempFile.path().filename().string();
+                if (TempName == FileName) {
+                    Flag = false;
+                }
+            }
+            if (Flag) {
+                filesystem::copy(FirstPath, TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа");
+            }
+            
+        }
+
+        for (const auto& FilePath : std::filesystem::directory_iterator(SecondPath)) {
+            string FileName = FilePath.path().filename().string();
+            bool Flag = true;
+            cout << "2Первый цикл отработал штатно" << endl;
+            for (const auto& TempFile : std::filesystem::directory_iterator(TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа")) {
+                cout << "2Второй цикл отработал штатно" << endl;
+                string TempName = TempFile.path().filename().string();
+                if (TempName == FileName) {
+                    Flag = false;
+                }
+            }
+            if (Flag) {
+                filesystem::copy(SecondPath, TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа");
+            }
+        }
+
+    }
+
+    bool Start() {
+        bool Flag = true;
+        if (_chdir((TakePathToExeFile() + "\\LabaIT 2").c_str()) != 0) /*Проверка на существования папки*/ {
+            if (_mkdir((TakePathToExeFile() + "\\LabaIT 2").c_str()) == 0) {
+            }
+            else {
+                return false;
+            }
+        }
+
+        Flag = CreateFolder("Входные файлы");
+        Flag = CreateFolder("Входные файлы\\Файлы 1 типа");
+        Flag = CreateFolder("Входные файлы\\Файлы 2 типа");
+        Flag = CreateFolder("Выходные файлы");
+        cout << "Все файлы были успешно созданы/проверенны" << endl;
+        UpdateFileNames();
+
+        return Flag;
+    }
+
 
 
     void drawMenuExitMenu(int selectedItem) {
@@ -112,34 +190,83 @@
 
     void createFile() {
         system("cls");
+        cout << "Файл будет иметь расширение .txt" << endl;
+        cout << "Имя файла не должно быть больше 40 символов" << endl;
+        cout << "Для возврата в главное меню ничего не вводите и нажмите клавишу Enter" << endl;
         cout << "Введите имя файла: ";
         string NameFile;
-        cin >> NameFile;
+        std::getline(std::cin, NameFile);
 
-        //Проверка на существование файла с таким именем
-        ifstream Test(TakePathToExeFile() + "\\" + NameFile + ".txt");
-        if (Test.is_open()) {
+        //Проверка на пустую строку
+        if (NameFile.empty()) {}
 
-            cout << "Ошибка! Файл с таким именем уже существует, необходимо изменить имя файла" << endl;
-
-
-        }
-        
         else {
-            ofstream File(TakePathToExeFile() + "\\" + NameFile + ".txt");
-            if (File.is_open()) {
+            //Проверка не состоит ли имя файла только из расширения
+            if (NameFile == ".txt") {
+                cout << "Ошибка! Файл должен содержать не только расширение, необходимо изменить имя файла" << endl;
+                cout << "Для возврата в главное меню нажмите ESC, для повторного ввода нажмите любую другую клавишу" << endl;
+                int Key;
+                Key = _getch();
+                if (Key == ESC) {}
 
-                cout << "Файл " << NameFile << " успешно создан" << endl;
-                cout << "Нажмите любую клавишу, чтобы вернуться в главное меню...";
-                _getch();
+                else {
+                    createFile();
+                }
             }
-
             else {
-                cout << "Ошибка при создании файла" << endl;
-                cout << "Нажмите любую клавишу, чтобы вернуться в главное меню...";
-                _getch();
+
+                //Проверка есть ли в названии файла расширение, если есть то удаляем его
+                if (NameFile.size() > 3 && NameFile.substr(NameFile.size() - 4, 4) == ".txt") {
+                    NameFile.erase(NameFile.size() - 4, 4);
+                }
+
+                //Проверка размера имени файла
+                if (NameFile.size() > 40) {
+                    cout << "Ошибка! Файл должен содержать не больше 40 символов, необходимо изменить имя файла" << endl;
+                    cout << "Для возврата в главное меню нажмите ESC, для повторного ввода нажмите любую другую клавишу" << endl;
+                    int Key;
+                    Key = _getch();
+                    if (Key == ESC) {}
+
+                    else {
+                        createFile();
+                    }
+                }
+                else {
+
+                    //Проверка на существование файла с таким именем
+                    ifstream Test(TakePathToExeFile() + "\\" + NameFile + ".txt");
+                    if (Test.is_open()) {
+
+                        cout << "Ошибка! Файл с таким именем уже существует, необходимо изменить имя файла" << endl;
+                        cout << "Для возврата в главное меню нажмите ESC, для повторного ввода нажмите любую другую клавишу" << endl;
+                        int Key;
+                        Key = _getch();
+                        if (Key == ESC) {}
+
+                        else {
+                            createFile();
+                        }
+                    }
+
+                    //Создание файла в котором будут объеденены записы из выбранных файлов
+                    else {
+                        ofstream File(TakePathToExeFile() + "\\" + "Папка с файлами\\" + NameFile + ".txt");
+                        if (File.is_open()) {
+
+                            cout << "Файл " << NameFile << " успешно создан" << endl;
+                            cout << "Нажмите любую клавишу, чтобы вернуться в главное меню...";
+                            _getch();
+                        }
+
+                        else {
+                            cout << "Ошибка при создании файла" << endl;
+                            cout << "Нажмите любую клавишу, чтобы вернуться в главное меню...";
+                            _getch();
+                        }
+                    }
+
+                }
             }
         }
-
-        
     }
