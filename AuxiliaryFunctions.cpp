@@ -43,45 +43,161 @@
         }
     }
     
-    void UpdateFileNames() {
+    void CheckFileInFirstProgram() {
 
         std::string FirstPath = GetDesktopPath() + "\\Лабараторная по ИТ\\Файлы 1 типа"; // Путь к папке с файлами 1 типа
         std::string SecondPath = GetDesktopPath() + "\\Лабараторная по ИТ\\Файлы 2 типа"; // Путь к папке с файлами 2 типа
 
-        for (const auto& FilePath : std::filesystem::directory_iterator(FirstPath)) {
-            string FileName = FilePath.path().filename().string();
-            bool Flag = true;
-            cout << "1 Первый цикл отработал штатно" << endl;
-            for (const auto& TempFile : std::filesystem::directory_iterator(TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа")) {
-                cout << "1 Второй цикл отработал штатно" << endl;
-                string TempName = TempFile.path().filename().string();
-                if (TempName == FileName) {
-                    Flag = false;
-                }
-            }
-            if (Flag) {
-                filesystem::copy(FirstPath, TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа");
-            }
-            
-        }
+        if (_chdir((GetDesktopPath() + "\\Лабараторная по ИТ").c_str()) != 0) /*Проверка на существования папки*/ {
+            if (_chdir((FirstPath).c_str()) != 0) {
+                for (const auto& FilePath : std::filesystem::directory_iterator(FirstPath)) {
+                    string FileName = FilePath.path().filename().string();
+                    //bool Flag = true;
+                    //cout << "1 Первый цикл отработал штатно" << endl;
+                    try {
+                        filesystem::copy(FirstPath + "\\" + FileName, TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа" + "\\" + FileName, filesystem::copy_options::overwrite_existing);
+                    }
+                    catch (filesystem::filesystem_error& e) {
+                        std::cerr << "Ошибка: " << e.what() << std::endl;
+                    }
+                    /*for (const auto& TempFile : std::filesystem::directory_iterator(TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа")) {
+                        string TempName = TempFile.path().filename().string();
+                        if (TempName == FileName) {
+                            Flag = false;
+                            cout << "1 Второй цикл отработал штатно" << endl;
+                            break;
+                        }
+                        cout << "1 Второй цикл отработал штатно" << endl;
 
-        for (const auto& FilePath : std::filesystem::directory_iterator(SecondPath)) {
-            string FileName = FilePath.path().filename().string();
-            bool Flag = true;
-            cout << "2 Первый цикл отработал штатно" << endl;
-            for (const auto& TempFile : std::filesystem::directory_iterator(TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа")) {
-                cout << "2 Второй цикл отработал штатно" << endl;
-                string TempName = TempFile.path().filename().string();
-                if (TempName == FileName) {
-                    Flag = false;
+                    }
+                    if (Flag) {
+                        filesystem::copy(FirstPath + "\\" + FileName + ".txt", TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа" + "\\" + FileName + ".txt", filesystem::copy_options::overwrite_existing);
+                    }*/
+
                 }
             }
-            if (Flag) {
-                filesystem::copy(SecondPath, TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа");
+            if (_chdir((SecondPath).c_str()) != 0) {
+                for (const auto& FilePath : std::filesystem::directory_iterator(SecondPath)) {
+                    string FileName = FilePath.path().filename().string();
+                    //bool Flag = true;
+                    //cout << "2 Первый цикл отработал штатно" << endl;
+
+                    try {
+                        filesystem::copy(SecondPath + "\\" + FileName, TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа" + "\\" + FileName, filesystem::copy_options::overwrite_existing);
+                    }
+                    catch (filesystem::filesystem_error& e) {
+                        std::cerr << "Ошибка: " << e.what() << std::endl;
+                    }
+
+
+                    /*for (const auto& TempFile : std::filesystem::directory_iterator(TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа")) {
+                        cout << "2 Второй цикл отработал штатно" << endl;
+                        string TempName = TempFile.path().filename().string();
+                        if (TempName == FileName) {
+                            Flag = false;
+                            break;
+                        }
+                    }
+                    if (Flag) {
+                        filesystem::copy(SecondPath, TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа");
+                    }*/
+                }
+            }
+            cout << "Файлы успешно обнавленны" << endl;
+            cout << "Нажмите любую клавишу для возврата в главное меню...";
+            _getch();
+        }
+    }
+    void drawAddFileMenu(int selectedItem) {
+
+        vector<string> menuItems = { "1. Поиск в папке первой программы", "2. Указать название папки с файлами" };
+
+        system("cls");
+        cout << "   --- Меню добавление файлов ---  " << endl;
+        cout << "Каким способом добавить файл?" << endl;
+        for (int i = 0; i < menuItems.size(); ++i) {
+            if (i == selectedItem) {
+                cout << "->" << menuItems[i] << endl;
+            }
+            else {
+                cout << "    " << menuItems[i] << endl;
+            }
+        }
+    }
+
+    bool AddFileMenu() {
+
+        int selected = 0;
+        bool running = true;
+
+        while (running) {
+            drawAddFileMenu(selected);
+
+            int key = _getch();
+
+            // Обработка специальных клавиш (стрелки)
+            if (key == 0 || key == 224) {
+                key = _getch();
+                switch (key) {
+                case KEY_UP:
+                    selected = (selected - 1 + 2) % 2; // Цикличная прокрутка вверх
+                    break;
+                case KEY_DOWN:
+                    selected = (selected + 1) % 2;     // Цикличная прокрутка вниз
+                    break;
+                case KEY_RIGHT:
+                    running = false;
+                    if (selected == 0) {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    break;
+                }
+            }
+            // Обработка цифровых клавиш '1' - '2' 
+            else if (key >= '1' && key <= '2') {
+                if (key - '1' == 0) {
+                    running = false;
+                    return true;
+                }
+                else
+                {
+                    running = false;
+                    return false;
+                }
+                break;
+            }
+
+            // Выход на ESC
+            else if (key == ESC) {
+                running = false;
+                return true;
+            }
+
+            else if (key == ENTER) {
+                running = false;
+                if (selected == 0) {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
 
     }
+
+    //bool AddOrUpdateFiles() {
+
+
+
+
+    //    return true;
+    //}
 
     bool Start() {
         bool Flag = true;
@@ -94,18 +210,28 @@
         }
 
         Flag = CreateFolder("Входные файлы");
-        Flag = CreateFolder("Входные файлы\\Файлы 1 типа");
-        Flag = CreateFolder("Входные файлы\\Файлы 2 типа");
-        Flag = CreateFolder("Выходные файлы");
-        cout << "Все файлы были успешно созданы/проверенны" << endl;
-        UpdateFileNames();
+        if (Flag == true) {
+            Flag = CreateFolder("Входные файлы\\Файлы 1 типа");
+            if (Flag == true) {
+                Flag = CreateFolder("Входные файлы\\Файлы 2 типа");
+                if (Flag == true) {
+                    Flag = CreateFolder("Выходные файлы");
+                }
+                else { return Flag; }
+            }
+            else { return Flag; }
+
+        }
+        else { return Flag; }
+        cout << "Все корневые файлы были успешно созданы/проверенны" << endl;
+        CheckFileInFirstProgram();
 
         return Flag;
     }
 
 
 
-    void drawMenuExitMenu(int selectedItem) {
+    void drawExitMenu(int selectedItem) {
 
         vector<string> menuItems = {"1. Нет!", "2.Да!"};
 
@@ -128,7 +254,7 @@
         bool running = true;
 
         while (running) {
-            drawMenuExitMenu(selected);
+            drawExitMenu(selected);
 
             int key = _getch();
 
