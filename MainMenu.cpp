@@ -23,11 +23,7 @@ void drawMenu(int selectedItem) {
 
     switch (itemIndex) {
     case 0: 
-        cout << "Вы открыли: Пункт " << itemIndex + 1 << "!" << endl;
-        cout << "Вывод данных в консоль ещё не сделан." << endl;
-        cout << "Нажмите любую клавишу, чтобы вернуться...";
-        
-        _getch();
+        InfoInConsole();
         return true;
         break;
     case 1: 
@@ -35,7 +31,7 @@ void drawMenu(int selectedItem) {
         return true;
         break;
     case 2:
-        UpdateFileNames();
+        CheckFileInFirstProgram();
         cout << "Файлы успешно обнавленны";
         Sleep(3000);
         return true;

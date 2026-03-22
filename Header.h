@@ -18,7 +18,13 @@
 
 using namespace std;
 
-
+struct FullString {
+    string ComputerLabel[21];
+    string NumberClass[14];
+    string ComputerFubricNumber[21];
+    string NumbersTerminal[3];
+    string NumbersVneshUstroystv[3];
+};
 
 void drawMenu(int selectedItem);
 bool performAction(int itemIndex);
@@ -27,7 +33,10 @@ void Work();
 void createFile();
 void InfoInConsole();
 bool Start();
-void UpdateFileNames();
+void DrawInfoInConsoleMenu(int selectedItem);
+void CheckFileInFirstProgram();
+void InfoInConsole();
+vector<FullString> FindInfo(int element, string Info);
 bool CreateFolder(std::string FolderNames);
 string GetDesktopPath();
 string TakePathToExeFile();

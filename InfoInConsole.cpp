@@ -1,18 +1,10 @@
 #include "Header.h"
 
-struct FullString {
 
-    string ComputerLabel[21];
-    string NumberClass[14];
-    string ComputerFubricNumber[21];
-    string NumbersTerminal[3];
-    string NumbersVneshUstroystv[3];
-
-};
 
 void DrawInfoInConsoleMenu(int selectedItem) {
 
-    vector<string> menuItems = { "1. Марка ЭВМ (рекомендуемый вариант)", "2. Номер кафедры",
+    vector<string> menuItems = { "1. Марка ЭВМ", "2. Номер кафедры",
         "3. Заводской номер ЭВМ", "4. Количество терминалов", "5. Количество внешних запоминающих устройств"};
 
     system("cls");
@@ -33,11 +25,31 @@ vector<FullString> FindInfo(int element, string Info) {
 
     vector<FullString> Information;
     FullString TemporaryInformation;
-    string FirstPath = TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа\\";
-    string SecondPath = TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа\\";
+    string FirstPath = TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа";
+    string SecondPath = TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа";
 
-    switch (element) { 
+    switch (element) {
     case 0 /*Поиск по Марке ЭВМ*/:
+        for (const auto& FilePath : std::filesystem::directory_iterator(FirstPath)) {
+            string FileName = FilePath.path().filename().string();
+            string FullTemporary, Temporary;
+            Temporary.clear();
+            ifstream File(FirstPath + FileName);
+
+            while (getline(File, FullTemporary)) {
+                Temporary = FullTemporary;
+                Temporary.erase(22, Temporary.size() - 1);
+                for (int i = 0; i <= Temporary.size() - Info.size(); i++) {
+                    string Temp = Temporary.substr(i, Info.size());
+                    if (Temp == Info) {
+                        //Information[Information.size()].ComputerLabel = 
+                        break;
+                    }
+                    else {
+                    }
+                }
+            }
+        }
         break;
     case 1 /*Поиск по Номеру кафедры*/:
         break;
@@ -48,7 +60,7 @@ vector<FullString> FindInfo(int element, string Info) {
     case 4 /*Поиск по Количеству внешних запоминающих устройств*/:
         break;
     }
-
+    return Information;
 }
 
 
