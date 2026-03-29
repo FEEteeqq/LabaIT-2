@@ -31,8 +31,7 @@ void drawMenu(int selectedItem) {
         return true;
         break;
     case 2:
-        CheckFileInFirstProgram();
-        cout << "Файлы успешно обнавленны";
+        return AddFileMenu();
         Sleep(3000);
         return true;
         break;

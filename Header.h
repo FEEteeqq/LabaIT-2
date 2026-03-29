@@ -13,23 +13,25 @@
 #define KEY_UP 72
 #define KEY_DOWN 80
 #define KEY_RIGHT 77
+#define KEY_LEFT 75
 #define ESC 27
 #define ENTER 13
 
 using namespace std;
 
 struct FullString {
-    string ComputerLabel[21];
-    string NumberClass[14];
-    string ComputerFubricNumber[21];
-    string NumbersTerminal[3];
-    string NumbersVneshUstroystv[3];
+    string ComputerLabel;
+    string NumberClass;
+    string ComputerFubricNumber;
+    string NumbersTerminal;
+    string NumbersVneshUstroystv;
 };
 
 void drawMenu(int selectedItem);
 bool performAction(int itemIndex);
 bool CloseProgram();
 void Work();
+bool AddFileMenu();
 void createFile();
 void InfoInConsole();
 bool Start();
