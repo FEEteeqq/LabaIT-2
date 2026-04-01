@@ -32,7 +32,6 @@ void drawMenu(int selectedItem) {
         break;
     case 2:
         return AddFileMenu();
-        Sleep(3000);
         return true;
         break;
     case 3:

@@ -49,159 +49,281 @@ vector<FullString> FindInfo(int element) {
 
     getline(cin, TemporaryData);
     if (TemporaryData.empty()) {} /*Возврат в меню выбора пункта для поиска*/
-
     else {
-        cout << "Перешли к поиску в файлах" << endl;
+        if (element < 4) {
 
-        std::string FirstPath = TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа\\"; // Путь к папке с файлами 1 типа
-        std::string SecondPath = TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа\\"; // Путь к папке с файлами 2 типа
+            std::string FirstPath = TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа\\"; // Путь к папке с файлами 1 типа
+            std::string SecondPath = TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа\\"; // Путь к папке с файлами 2 типа
 
-        if (FirstPath.c_str() != 0) {
-
-            for (const auto& FilePath : std::filesystem::directory_iterator(FirstPath)) { // Цикл необходимый для получения имён файлов из папки
-                string FileName = FilePath.path().filename().string(); // Оставляем от полного пути только имя файла
-                ifstream File(FirstPath + FileName); 
-                if (File.is_open()) {
-                    string Temp;
-                    int i = 0;
-                    while (getline(File, Temp)) {
-
-                        switch (element) {
-                        case 1:
-                            cout << "Должна произойти запись по 1.1 условию" << endl;
-                            if (Temp.find(TemporaryData) <= 23) {
-                                cout << "Должна произойти запись по 1.2 условию" << endl;
-                                cout << Temp.substr(0, 23) << endl;
-                                cout << Temp.substr(0, 23).find(TemporaryData) << endl;
-                                cout << Temp.substr(0, 23).find(TemporaryData) + TemporaryData.size() << endl;
-                                cout << Temp.substr(Temp.substr(0, 23).find(TemporaryData), Temp.substr(0, 23).find(TemporaryData) + TemporaryData.size()) << endl;
-                                _getch();
-                                // КОРОЧЕ ОН БЕРЁТ НЕ 2 ИТЕРАТОРА А ИТЕР НА ПЕРВЫЙ ЭЛ И ДЛИНУ СРЕЗА ЁБАНА
-                                if (Temp.substr(Temp.substr(0, 23).find(TemporaryData), Temp.substr(0, 23).find(TemporaryData) + TemporaryData.size()) == TemporaryData) {
-                                    cout << "Должна произойти запись по 1.3 условию" << endl;
-                                    Information.resize(Information.size() + 1);
-                                    Information[i].ComputerLabel = (Temp.substr(0, Temp.find(" ")));
-                                    Information[i].NumberClass = (Temp.substr(23, Temp.substr(23, 45).find(" ")));
-                                    Information[i].ComputerFubricNumber = (Temp.substr(46));
-                                    Information[i].NumbersTerminal = "---";
-                                    Information[i].NumbersVneshUstroystv = "---";
-                                    
-                                    i++;
-                                }
-                            }
-                            break;
-                        case 2:
-                            cout << "Должна произойти запись по 2.1 условию" << endl;
-                            if (Temp.find(TemporaryData) >= 24 && Temp.find(TemporaryData) <= 46) {
-                                cout << "Должна произойти запись по 2.2 условию" << endl;
-                                if (Temp.substr(Temp.substr(24, 46).find(TemporaryData), Temp.substr(24, 46).find(TemporaryData) + TemporaryData.size() - 1) == TemporaryData) {
-                                    cout << "Должна произойти запись по 2.3 условию" << endl;
-                                    Information.resize(Information.size() + 1);
-                                    Information[i].ComputerLabel = (Temp.substr(0, Temp.find(" ")));
-                                    Information[i].NumberClass = (Temp.substr(24, Temp.substr(24, 46).find(" ")));
-                                    Information[i].ComputerFubricNumber = (Temp.substr(47));
-                                    Information[i].NumbersTerminal = "---";
-                                    Information[i].NumbersVneshUstroystv = "---";
-
-                                    i++;
-                                }
-                            }
-                            break;
-                        case 3:
-                            cout << "Должна произойти запись по 3 условию" << endl;
-                            if (Temp.find(TemporaryData) >= 47 && Temp.find(TemporaryData) <= 68) {
-                                if (Temp.substr(Temp.substr(47).find(TemporaryData), Temp.substr(47).find(TemporaryData) + TemporaryData.size() - 1) == TemporaryData) {
-                                    cout << "Должна произойти запись по 3 условию" << endl;
-                                    Information.resize(Information.size() + 1);
-                                    Information[i].ComputerLabel = (Temp.substr(0, Temp.find(" ")));
-                                    Information[i].NumberClass = (Temp.substr(24, Temp.substr(24, 46).find(" ")));
-                                    Information[i].ComputerFubricNumber = (Temp.substr(47));
-                                    Information[i].NumbersTerminal = "---";
-                                    Information[i].NumbersVneshUstroystv = "---";
-
-                                    i++;
-                                }
-                            }
-                            break;
-                        }
-                    }
-                    File.close();
-                }
-                else {
-                    cout << "Файл не открылся" << endl;
-
-                } // Файл не открылся
-            }
-
-            cout << "Найдено совпадений: " << Information.size() << endl;
-
-            if (Information.size() > 2 && !Information[0].ComputerLabel.empty()) {
-                bool running = true;
-                int Pages = 0;
-                //int i = 0;
-                while (running) {
-
-                    system("cls");
-                    cout << "Найдено " << Information.size() << " совпадений: " << endl;
-                    cout << "Марка ЭВМ: " << Information[Pages].ComputerLabel << endl;
-                    cout << "Номер кафедры: " << Information[Pages].NumberClass << endl;
-                    cout << "Заводской номер ЭВМ: " << Information[Pages].ComputerFubricNumber << endl;
-                    cout << "Колличество терминалов: " << Information[Pages].NumbersTerminal << endl;
-                    cout << "Колличество внешних запоминающий устройств: " << Information[Pages].NumbersVneshUstroystv << endl;
-                    cout << "Страница " << (Pages + 1) << " из " << Information.size() << endl;
-                    cout << "Для переключения страниц используйте клавиши стрелочек влево и вправо, для выхода нажмите клавишу ESC" << endl;
-
-                    int key = _getch();
-
-                    // Обработка специальных клавиш (стрелки)
-                    if (key == 0 || key == 224) {
-                        key = _getch();
-                        switch (key) {
-                        case KEY_RIGHT:
-                            Pages = (Pages + 1) % Information.size(); // Цикличная прокрутка вправо
-                            break;
-                        case KEY_LEFT:
-                            Pages = (Pages - 1 + Information.size()) % Information.size(); // Цикличная прокрутка влево
-                            break;
-                        }
-                    }
-
-                    else if (key == ESC) {
-                        running = false;
-                    }
-
-                }
-            }
-
-            else if ((Information.size() == 1 && !Information[0].ComputerLabel.empty()) || (Information.size() == 2 && Information[1].ComputerLabel.empty())) {
-                bool running = true;
+            if (FirstPath.c_str() != 0) {
                 int i = 0;
-                while (running) {
+                for (const auto& FilePath : std::filesystem::directory_iterator(FirstPath)) { // Цикл необходимый для получения имён файлов из папки
+                    string FileName = FilePath.path().filename().string(); // Оставляем от полного пути только имя файла
+                    ifstream File(FirstPath + FileName);
+                    if (File.is_open()) {
+                        string Temp;
 
-                    system("cls");
-                    cout << "Марка ЭВМ: " << Information[i].ComputerLabel << endl;
-                    cout << "Номер кафедры: " << Information[i].NumberClass << endl;
-                    cout << "Заводской номер ЭВМ: " << Information[i].ComputerFubricNumber << endl;
-                    cout << "Колличество терминалов: " << Information[i].NumbersTerminal << endl;
-                    cout << "Колличество внешних запоминающий устройств: " << Information[i].NumbersVneshUstroystv << endl;
-                    cout << "Для выхода нажмите клавишу ESC" << endl;
-                    int key = _getch();
-                    if (key == ESC) {
-                        running = false;
+                        while (getline(File, Temp)) {
+
+                            switch (element) {
+                            case 1:
+
+                                if (!Temp.empty() && Temp.find(TemporaryData) < 23) {
+                                    if (Temp.substr(Temp.substr(0, 23).find(TemporaryData), TemporaryData.size()) == TemporaryData) {
+                                        Information.resize(Information.size() + 1);
+                                        Information[i].ComputerLabel = (Temp.substr(0, Temp.find(" ")));
+                                        Information[i].NumberClass = (Temp.substr(23, Temp.substr(23, 23).find(" ")));
+                                        Information[i].ComputerFubricNumber = (Temp.substr(46));
+                                        Information[i].NumbersTerminal = "---";
+                                        Information[i].NumbersVneshUstroystv = "---";
+                                        i++;
+                                    }
+                                }
+                                break;
+
+                            case 2:
+
+                                if (!Temp.empty() && Temp.substr(23).find(TemporaryData) < 23) {
+                                    if (Temp.substr((Temp.substr(23, 23).find(TemporaryData) + 23), TemporaryData.size()) == TemporaryData) {
+                                        Information.resize(Information.size() + 1);
+                                        Information[i].ComputerLabel = (Temp.substr(0, Temp.find(" ")));
+                                        Information[i].NumberClass = (Temp.substr(23, Temp.substr(23, 23).find(" ")));
+                                        Information[i].ComputerFubricNumber = (Temp.substr(46));
+                                        Information[i].NumbersTerminal = "---";
+                                        Information[i].NumbersVneshUstroystv = "---";
+                                        i++;
+                                    }
+                                }
+                                break;
+                            case 3:
+                                if (!Temp.empty() && (Temp.substr(46).find(TemporaryData) + 46) >= 46 && (Temp.substr(46).find(TemporaryData) + 46) < 66) {
+                                    if (Temp.substr(Temp.substr(46).find(TemporaryData) + 46, TemporaryData.size()) == TemporaryData) {
+                                        Information.resize(Information.size() + 1);
+                                        Information[i].ComputerLabel = (Temp.substr(0, Temp.find(" ")));
+                                        Information[i].NumberClass = (Temp.substr(23, Temp.substr(23, 23).find(" ")));
+                                        Information[i].ComputerFubricNumber = (Temp.substr(46));
+                                        Information[i].NumbersTerminal = "---";
+                                        Information[i].NumbersVneshUstroystv = "---";
+                                        i++;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        File.close();
+                    }
+                    else {
+                        cout << "Файл не открылся" << endl;
+                        _getch();
                     }
                 }
             }
-
             else {
-                cout << "Совпадений не найдено, для выхода нажмите любую клавишу...";
+                cout << "Ошибка конвертации строки string в const char*" << endl;
+                _getch();
+            }
+
+            if (SecondPath.c_str() != 0) {
+                for (const auto& FilePath : std::filesystem::directory_iterator(SecondPath)) {
+                    string FileName = FilePath.path().filename().string(); // Оставляем от полного пути только имя файла
+                    ifstream File(SecondPath + FileName);
+                    if (File.is_open()) {
+                        string Temp;
+
+                        while (getline(File, Temp)) {
+                            for (int i = 0; i < Information.size(); i++) {
+                                if (!Temp.empty() && Temp.substr(0, Temp.find(" ")) == Information[i].ComputerLabel) {
+                                    Information[i].NumbersTerminal = Temp.substr(23, Temp.substr(23).find(" "));
+                                    Information[i].NumbersVneshUstroystv = Temp.substr(50);
+                                }
+                            }
+                            if (element == 1) {
+                                if (!Temp.empty() && Temp.find(TemporaryData) < 23) {
+                                    if (Temp.substr(Temp.substr(0, 23).find(TemporaryData), TemporaryData.size()) == TemporaryData) {
+                                        bool Flag = true;
+                                        for (int i = 0; i < Information.size(); i++) {
+                                            if (Temp.substr(0, Temp.find(" ")) == Information[i].ComputerLabel) {
+                                                Flag = false;
+                                                break;
+                                            }
+                                        }
+
+                                        if (Flag) {
+                                            int i = Information.size();
+                                            Information.resize(Information.size() + 1);
+                                            Information[i].ComputerLabel = Temp.substr(0, Temp.find(" "));
+                                            Information[i].NumberClass = "---";
+                                            Information[i].ComputerFubricNumber = "---";
+                                            Information[i].NumbersTerminal = Temp.substr(23, Temp.substr(23).find(" "));
+                                            Information[i].NumbersVneshUstroystv = Temp.substr(50);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        cout << "Файл не открылся" << endl;
+                        _getch();
+                    }
+                }
+            }
+            else {
+                cout << "Ошибка конвертации строки string в const char*" << endl;
+                _getch();
+            }
+        }
+
+
+        else if (element > 3) {
+
+            std::string FirstPath = TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа\\"; // Путь к папке с файлами 1 типа
+            std::string SecondPath = TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа\\"; // Путь к папке с файлами 2 типа
+
+            if (SecondPath.c_str() != 0) {
+                int i = 0;
+                for (const auto& FilePath : std::filesystem::directory_iterator(SecondPath)) { // Цикл необходимый для получения имён файлов из папки
+                    string FileName = FilePath.path().filename().string(); // Оставляем от полного пути только имя файла
+                    ifstream File(SecondPath + FileName);
+                    if (File.is_open()) {
+                        string Temp;
+
+                        while (getline(File, Temp)) {
+
+                            switch (element) {
+                            case 4:
+
+                                if (!Temp.empty() && Temp.substr(23).find(TemporaryData) <= 26) {
+                                    if (Temp.substr(Temp.substr(23, 26).find(TemporaryData) + 23, TemporaryData.size()) == TemporaryData) {
+                                        Information.resize(Information.size() + 1);
+                                        Information[i].ComputerLabel = (Temp.substr(0, Temp.find(" ")));
+                                        Information[i].NumberClass = "---";
+                                        Information[i].ComputerFubricNumber = "---";
+                                        Information[i].NumbersTerminal = (Temp.substr(23, Temp.substr(23, 26).find(" ")));
+                                        Information[i].NumbersVneshUstroystv = (Temp.substr(50));
+                                        i++;
+                                    }
+                                }
+                                break;
+
+                            case 5:
+
+                                if (!Temp.empty() && Temp.substr(50).find(TemporaryData) + 50 <= 53) {
+                                    if (Temp.substr(Temp.substr(50).find(TemporaryData) + 50, TemporaryData.size()) == TemporaryData) {
+                                        Information.resize(Information.size() + 1);
+                                        Information[i].ComputerLabel = (Temp.substr(0, Temp.find(" ")));
+                                        Information[i].NumberClass = "---";
+                                        Information[i].ComputerFubricNumber = "---";
+                                        Information[i].NumbersTerminal = (Temp.substr(23, Temp.substr(23, 26).find(" ")));
+                                        Information[i].NumbersVneshUstroystv = (Temp.substr(50));
+                                        i++;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        File.close();
+                    }
+                    else {
+                        cout << "Файл не открылся" << endl;
+                        _getch();
+                    }
+                }
+            }
+            else {
+                cout << "Ошибка конвертации строки string в const char*" << endl;
+                _getch();
+            }
+
+            if (FirstPath.c_str() != 0) {
+                for (const auto& FilePath : std::filesystem::directory_iterator(FirstPath)) {
+                    string FileName = FilePath.path().filename().string(); // Оставляем от полного пути только имя файла
+                    ifstream File(FirstPath + FileName);
+                    if (File.is_open()) {
+                        string Temp;
+
+                        while (getline(File, Temp)) {
+                            for (int i = 0; i < Information.size(); i++) {
+                                if (!Temp.empty() && Temp.substr(0, Temp.find(" ")) == Information[i].ComputerLabel) {
+                                    Information[i].NumberClass = Temp.substr(23, Temp.substr(23).find(" "));
+                                    Information[i].ComputerFubricNumber = Temp.substr(46);
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        cout << "Файл не открылся" << endl;
+                        _getch();
+                    }
+                }
+            }
+            else {
+                cout << "Ошибка конвертации строки string в const char*" << endl;
                 _getch();
             }
 
 
         }
-        else {
-            cout << "Папка не найдена" << endl;
 
+        if (Information.size() > 1 && !Information[1].ComputerLabel.empty()) {
+            bool running = true;
+            int Pages = 0;
+            while (running) {
+
+                system("cls");
+                cout << "Найдено совпадений: " << Information.size() << endl << endl;
+                cout << "Марка ЭВМ: " << Information[Pages].ComputerLabel << endl;
+                cout << "Номер кафедры: " << Information[Pages].NumberClass << endl;
+                cout << "Заводской номер ЭВМ: " << Information[Pages].ComputerFubricNumber << endl;
+                cout << "Колличество терминалов: " << Information[Pages].NumbersTerminal << endl;
+                cout << "Колличество внешних запоминающий устройств: " << Information[Pages].NumbersVneshUstroystv << endl << endl;
+                cout << "Страница " << (Pages + 1) << " из " << Information.size() << endl;
+                cout << "Для переключения страниц используйте клавиши стрелочек влево и вправо, для выхода нажмите клавишу ESC" << endl;
+
+                int key = _getch();
+
+                // Обработка специальных клавиш (стрелки)
+                if (key == 0 || key == 224) {
+                    key = _getch();
+                    switch (key) {
+                    case KEY_RIGHT:
+                        Pages = (Pages + 1) % Information.size(); // Цикличная прокрутка вправо
+                        break;
+                    case KEY_LEFT:
+                        Pages = (Pages - 1 + Information.size()) % Information.size(); // Цикличная прокрутка влево
+                        break;
+                    }
+                }
+
+                else if (key == ESC) {
+                    running = false;
+                }
+
+            }
+        }
+
+        else if ((Information.size() == 1 && !Information[0].ComputerLabel.empty()) || (Information.size() == 2 && Information[1].ComputerLabel.empty())) {
+            bool running = true;
+            int i = 0;
+            while (running) {
+
+                system("cls");
+                cout << "Марка ЭВМ: " << Information[i].ComputerLabel << endl;
+                cout << "Номер кафедры: " << Information[i].NumberClass << endl;
+                cout << "Заводской номер ЭВМ: " << Information[i].ComputerFubricNumber << endl;
+                cout << "Колличество терминалов: " << Information[i].NumbersTerminal << endl;
+                cout << "Колличество внешних запоминающий устройств: " << Information[i].NumbersVneshUstroystv << endl;
+                cout << "Для выхода нажмите клавишу ESC" << endl;
+                int key = _getch();
+                if (key == ESC) {
+                    running = false;
+                }
+            }
+        }
+
+        else {
+            cout << "Совпадений не найдено, для выхода нажмите любую клавишу...";
+            _getch();
         }
     }
 

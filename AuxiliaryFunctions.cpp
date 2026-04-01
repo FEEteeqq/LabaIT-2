@@ -45,10 +45,11 @@
     
     void CheckFileInFirstProgram() {
 
+        std::string FirstPath = GetDesktopPath() + "\\Лабараторная по ИТ\\Файлы 1 типа"; // Путь к папке с файлами 1 типа
+        std::string SecondPath = GetDesktopPath() + "\\Лабараторная по ИТ\\Файлы 2 типа"; // Путь к папке с файлами 2 типа
+
         if (_chdir((GetDesktopPath() + "\\Лабараторная по ИТ").c_str()) == 0) /*Проверка на существования папки*/ {
-            std::string FirstPath = GetDesktopPath() + "\\Лабараторная по ИТ\\Файлы 1 типа"; // Путь к папке с файлами 1 типа
-            std::string SecondPath = GetDesktopPath() + "\\Лабараторная по ИТ\\Файлы 2 типа"; // Путь к папке с файлами 2 типа
-            if (_chdir(FirstPath.c_str()) == 0) {
+            if (_chdir((FirstPath).c_str()) == 0) {
                 for (const auto& FilePath : std::filesystem::directory_iterator(FirstPath)) {
                     string FileName = FilePath.path().filename().string();
                     //bool Flag = true;
@@ -75,7 +76,7 @@
 
                 }
             }
-            if (_chdir(SecondPath.c_str()) == 0) {
+            if (_chdir((SecondPath).c_str()) == 0) {
                 for (const auto& FilePath : std::filesystem::directory_iterator(SecondPath)) {
                     string FileName = FilePath.path().filename().string();
                     //bool Flag = true;
@@ -102,16 +103,13 @@
                     }*/
                 }
             }
-            cout << "Файлы успешно обнавленны" << endl;
-            cout << "Нажмите любую клавишу для возврата в главное меню...";
-            _getch();
+            
         }
         else {
-            cout << "Не найдена первая программа" << endl;
+            cout << "Не найдена папка первой программы" << endl;
             _getch();
         }
     }
-
     void drawAddFileMenu(int selectedItem) {
 
         vector<string> menuItems = { "1. Поиск в папке первой программы", "2. Указать название папки с файлами" };
@@ -167,6 +165,9 @@
                 if (key - '1' == 0) {
                     running = false;
                     CheckFileInFirstProgram();
+                    cout << "Файлы успешно обновленны" << endl;
+                    cout << "Нажмите любую клавишу для возврата в главное меню...";
+                    _getch();
                     return true;
                 }
                 else
@@ -187,10 +188,15 @@
                 running = false;
                 if (selected == 0) {
                     CheckFileInFirstProgram();
+                    system("cls");
+                    cout << "Файлы успешно обновленны" << endl;
+                    cout << "Нажмите любую клавишу для возврата в главное меню...";
+                    _getch();
                     return true;
                 }
                 else
                 {
+                    running = false;
                     return true;
                 }
             }
@@ -224,15 +230,17 @@
                 if (Flag == true) {
                     Flag = CreateFolder("Выходные файлы");
                 }
-                else { /*return Flag;*/ }
+                else {}
             }
-            else { /*return Flag;*/ }
+            else {}
 
         }
-        else { /*return Flag;*/ }
+        else {}
         cout << "Все корневые файлы были успешно созданы/проверенны" << endl;
         CheckFileInFirstProgram();
-
+        cout << "Файлы успешно обновленны" << endl;
+        cout << "Нажмите любую клавишу для перехода в главное меню...";
+        _getch();
         return Flag;
     }
 
