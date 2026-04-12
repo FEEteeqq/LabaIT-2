@@ -4,14 +4,11 @@
     char buffer[MAX_PATH];
     // NULL означает, что мы хотим получить путь текущего процесса
     DWORD length = GetModuleFileNameA(NULL, buffer, MAX_PATH);
-
     if (length != 0) {
         std::string exePath(buffer);
         std::string dir = exePath.substr(0, exePath.find_last_of("\\/"));
-
         return dir;
     }
-
     else {
         std::cout << "Ошибка при получении пути!" << std::endl;
         cout << "Для возврата в главное меню нажмите любую клавишу..." << std::endl;
@@ -22,11 +19,9 @@
 
     string GetDesktopPath() { // Функция для получения пути до рабочего стола
         char path[MAX_PATH];
-
         if (SUCCEEDED(SHGetFolderPathA(NULL, CSIDL_DESKTOPDIRECTORY, NULL, 0, path))) {
             return std::string(path);
         }
-
         return ""; // Возвращаем пустую строку в случае ошибки
     }
 
@@ -52,9 +47,7 @@
         if (_chdir((GetDesktopPath() + "\\Лабараторная по ИТ").c_str()) == 0) /*Проверка на существования папки*/ {
             if (_chdir((FirstPath).c_str()) == 0) {
                 for (const auto& FilePath : std::filesystem::directory_iterator(FirstPath)) {
-
                     string FileName = FilePath.path().filename().string();
-
                     ifstream File(FirstPath + "\\" + FileName);
                     string Temp;
                     bool Flag = false;
@@ -125,7 +118,6 @@
                     }
                 }
             }
-            
         }
         else {
             if (!Start) {
@@ -142,7 +134,6 @@
                 _getch();
             }
         }
-
         if (!Start) {
             system("cls");
             cout << "Файлы успешно обновленны" << endl;
@@ -152,9 +143,7 @@
     }
 
     void DrawAddFileMenu(int selectedItem) {
-
         vector<string> menuItems = { "1. Поиск в папке первой программы", "2. Выбрать файл" };
-
         system("cls");
         cout << "   ---- МЕНЮ ДОБАВЛЕНИЯ ФАЙЛОВ ----  " << endl << endl;
         cout << "Каким способом добавить файл?" << endl << endl;
@@ -170,15 +159,11 @@
     }
 
     bool AddFileMenu() {
-
         int selected = 0;
         bool running = true;
-
         while (running) {
             DrawAddFileMenu(selected);
-
             int key = _getch();
-
             // Обработка специальных клавиш (стрелки)
             if (key == 0 || key == 224) {
                 key = _getch();
@@ -207,18 +192,16 @@
                     CheckFileInFirstProgram(false);
                     return true;
                 }
-                else
-                {
+                else {
                     running = AddFiles();
                 }
             }
-
             // Выход на ESC
             else if (key == ESC) {
                 running = false;
                 return true;
             }
-
+            // Обработка клавиши Enter
             else if (key == ENTER) {
                 if (selected == 0) {
                     CheckFileInFirstProgram(false);
@@ -234,9 +217,7 @@
     }
 
     bool AddFiles() {
-
         string Path = ChooseFile(GetDesktopPath(), false);
-
         if (!Path.empty()) {
             if (Path.substr(Path.size() - 4) == ".txt") {
                 ifstream File(Path);
@@ -260,7 +241,6 @@
                         break;
                     }
                 }
-
                 if (Flag) {
                     if (FirstString == "Марка ЭВМ              Номера кафедры         Заводской номер ЭВМ") {
                         string FileName = Path.substr(Path.find_last_of("/\\") + 1);
@@ -309,48 +289,6 @@
                 }
                 return true;
             }
-
-            /*else if (Path.substr(Path.size() - 13, 12) == "Файлы 1 типа") {
-                int i = 0;
-                if (_chdir((Path).c_str()) == 0) {
-                    for (const auto& FilePath : std::filesystem::directory_iterator(Path)) {
-                        string FileName = FilePath.path().filename().string();
-                        try {
-                            filesystem::copy(Path + "\\" + FileName, TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа" + "\\" + FileName, filesystem::copy_options::overwrite_existing);
-                        }
-                        catch (filesystem::filesystem_error& e) {
-                            std::cerr << "Ошибка: " << e.what() << std::endl;
-                        }
-                    }
-                }
-                cout << "Успешно дабавленно " << i << "файлов" << endl;
-                cout << "Для выхода в меню добавление файлов нажмите любую клавишу..." << endl;
-                _getch();
-                return true;
-            }
-            else if (Path.substr(Path.size() - 13, 12) == "Файлы 2 типа") {
-                int i = 0;
-                if (_chdir((Path).c_str()) == 0) {
-                    for (const auto& FilePath : std::filesystem::directory_iterator(Path)) {
-                        string FileName = FilePath.path().filename().string();
-                        try {
-                            filesystem::copy(Path + "\\" + FileName, TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа" + "\\" + FileName, filesystem::copy_options::overwrite_existing);
-                            i++;
-                        }
-                        catch (filesystem::filesystem_error& e) {
-                            std::cerr << "Ошибка: " << e.what() << std::endl;
-                        }
-                    }
-                }
-                cout << "Успешно дабавленно " << i << "файлов" << endl;
-                cout << "Для выхода в меню добавление файлов нажмите любую клавишу..." << endl;
-                _getch();
-                return true;
-            }
-            else {
-
-            }*/
-
         }       
         else {
             return true;
@@ -366,7 +304,6 @@
                 return false;
             }
         }
-
         Flag = CreateFolder("Входные файлы");
         if (Flag == true) {
             Flag = CreateFolder("Входные файлы\\Файлы 1 типа");
@@ -378,21 +315,15 @@
                 else {}
             }
             else {}
-
         }
         else {}
         CheckFileInFirstProgram(true);
         return Flag;
     }
 
-
-
     void drawExitMenu(int selectedItem) {
-
-        vector<string> menuItems = {"1. Нет!", "2.Да!"};
-
+        vector<string> menuItems = {"1. Нет!", "2. Да!"};
         system("cls");
-
         cout << "Вы точно хотите завершить работу программы?" << endl;
         for (int i = 0; i < menuItems.size(); ++i) {
             if (i == selectedItem) {
@@ -405,15 +336,11 @@
     }
 
     bool CloseProgram() {
-
         int selected = 0;
         bool running = true;
-
         while (running) {
             drawExitMenu(selected);
-
             int key = _getch();
-
             // Обработка специальных клавиш (стрелки)
             if (key == 0 || key == 224) {
                 key = _getch();
@@ -449,13 +376,12 @@
                 }
                 break;
             }
-
             // Выход на ESC
             else if (key == ESC) {
                 running = false;
                 return true;
             }
-
+            // Обработка клавиши Enter
             else if (key == ENTER) {
                 running = false;
                 if (selected == 0) {
@@ -467,5 +393,4 @@
                 }
             }
         }
-
     }

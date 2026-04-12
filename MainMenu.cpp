@@ -1,11 +1,7 @@
 #include "Header.h"
 
-
-
 void drawMenu(int selectedItem) {
-
     vector<string> menuItems = { "1. Вывод данных в консоль", "2. Вывод данных в файл", "3. Обновить списки с файлами", "4. Завершить работу программы" };
-
     system("cls");
     cout << "   ---- ГЛАВНОЕ МЕНЮ ----" << endl << endl;
     for (int i = 0; i < menuItems.size(); ++i) {
@@ -18,15 +14,14 @@ void drawMenu(int selectedItem) {
     }
 }
 
-    bool performAction(int itemIndex) {
+bool performAction(int itemIndex) {
     system("cls");
-
     switch (itemIndex) {
-    case 0: 
+    case 0:
         InfoInConsole();
         return true;
         break;
-    case 1: 
+    case 1:
         InfoInFile();
         return true;
         break;
@@ -37,23 +32,15 @@ void drawMenu(int selectedItem) {
         return CloseProgram();
         break;
     }
-    
-
-
-    
-    
 }
 
 void Work() {
     bool running = Start();
     system("cls");
     int selected = 0;
-
     while (running) {
         drawMenu(selected);
-
         int key = _getch();
-
         // Обработка специальных клавиш (стрелки)
         if (key == 0 || key == 224) {
             key = _getch();
@@ -82,10 +69,8 @@ void Work() {
         else if (key == ESC) {
             running = CloseProgram();
         }
-
         else if (key == ENTER) {
             running = performAction(selected);
         }
     }
-
 }

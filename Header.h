@@ -20,7 +20,8 @@
 using namespace std;
 
 struct FullString {
-    string FileName;
+    string FirstFileName;
+    string SecondFileName;
     string ComputerLabel;
     string NumberClass;
     string ComputerFubricNumber;
@@ -29,21 +30,26 @@ struct FullString {
 };
 
 void drawMenu(int selectedItem);
-bool performAction(int itemIndex);
-bool performActionWithFile(int itemIndex, string& FirstFile, string& SecondFile, string& ExitFile);
-bool CloseProgram();
 void Work();
+void DrawInfoFileMenu(int selectedItem, string FirstFile, string SecondFile, string ExitFile, string Status);
 void InfoInFile();
-bool AddFileMenu();
-bool AddFiles();
-string ExitFileName();
-string ChooseFile(string Path, bool OnlyName);
-void InfoInConsole();
-bool Start();
 void DrawInfoInConsoleMenu(int selectedItem);
-void CheckFileInFirstProgram(bool Start);
+void FindInfo(int element);
 void InfoInConsole();
-vector<FullString> FindInfo(int element);
+void CheckFileInFirstProgram(bool Start);
+void DrawAddFileMenu(int selectedItem);
+void drawExitMenu(int selectedItem);
+
+bool CloseProgram();
+bool Start();
+bool AddFiles();
+bool AddFileMenu();
+bool performActionWithFile(int itemIndex, string& FirstFile, string& SecondFile, string& ExitFile);
+bool performAction(int itemIndex);
+bool CreateAndWriteFile(string FirstFile, string SecondFile, string ExitFile);
 bool CreateFolder(std::string FolderNames);
+
 string GetDesktopPath();
 string TakePathToExeFile();
+string ExitFileName();
+string ChooseFile(string Path, bool OnlyName);
