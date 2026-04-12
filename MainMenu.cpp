@@ -7,10 +7,10 @@ void drawMenu(int selectedItem) {
     vector<string> menuItems = { "1. Вывод данных в консоль", "2. Вывод данных в файл", "3. Обновить списки с файлами", "4. Завершить работу программы" };
 
     system("cls");
-    cout << "------ ГЛАВНОЕ МЕНЮ ------" << endl;
+    cout << "   ---- ГЛАВНОЕ МЕНЮ ----" << endl << endl;
     for (int i = 0; i < menuItems.size(); ++i) {
         if (i == selectedItem) {
-            cout << "->" << menuItems[i] << endl;
+            cout << "-> " << menuItems[i] << endl;
         }
         else {
             cout << "    " << menuItems[i] << endl;
@@ -27,12 +27,11 @@ void drawMenu(int selectedItem) {
         return true;
         break;
     case 1: 
-        createFile();
+        InfoInFile();
         return true;
         break;
     case 2:
         return AddFileMenu();
-        return true;
         break;
     case 3:
         return CloseProgram();
@@ -76,7 +75,7 @@ void Work() {
                 running = CloseProgram();
             }
             else {
-                performAction(key - '1');
+                running = performAction(key - '1');
             }
         }
         // Выход на ESC

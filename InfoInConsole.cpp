@@ -8,16 +8,17 @@ void DrawInfoInConsoleMenu(int selectedItem) {
         "3. Заводской номер ЭВМ", "4. Количество терминалов", "5. Количество внешних запоминающих устройств"};
 
     system("cls");
-    cout << "   --- Меню выбора поля для поиска информации ---    " << endl;
+    cout << "   ---- МЕНЮ ВЫБОРА ПОЛЯ ДЛЯ ПОИСКА ИНФОРМАЦИИ ----    " << endl << endl;
     cout << "По какому полю будет поиск информации?" << endl;
     for (int i = 0; i < menuItems.size(); ++i) {
         if (i == selectedItem) {
-            cout << "->" << menuItems[i] << endl;
+            cout << "-> " << menuItems[i] << endl;
         }
         else {
             cout << "    " << menuItems[i] << endl;
         }
     }
+    cout << endl << "Для возврата в главное меню нажмите клавишу ESC" << endl;
 }
 
 
@@ -71,6 +72,7 @@ vector<FullString> FindInfo(int element) {
                                 if (!Temp.empty() && Temp.find(TemporaryData) < 23) {
                                     if (Temp.substr(Temp.substr(0, 23).find(TemporaryData), TemporaryData.size()) == TemporaryData) {
                                         Information.resize(Information.size() + 1);
+                                        //Information[i].FileName = FileName;
                                         Information[i].ComputerLabel = (Temp.substr(0, Temp.find(" ")));
                                         Information[i].NumberClass = (Temp.substr(23, Temp.substr(23, 23).find(" ")));
                                         Information[i].ComputerFubricNumber = (Temp.substr(46));
@@ -86,6 +88,7 @@ vector<FullString> FindInfo(int element) {
                                 if (!Temp.empty() && Temp.substr(23).find(TemporaryData) < 23) {
                                     if (Temp.substr((Temp.substr(23, 23).find(TemporaryData) + 23), TemporaryData.size()) == TemporaryData) {
                                         Information.resize(Information.size() + 1);
+                                        //Information[i].FileName = FileName;
                                         Information[i].ComputerLabel = (Temp.substr(0, Temp.find(" ")));
                                         Information[i].NumberClass = (Temp.substr(23, Temp.substr(23, 23).find(" ")));
                                         Information[i].ComputerFubricNumber = (Temp.substr(46));
@@ -99,6 +102,7 @@ vector<FullString> FindInfo(int element) {
                                 if (!Temp.empty() && (Temp.substr(46).find(TemporaryData) + 46) >= 46 && (Temp.substr(46).find(TemporaryData) + 46) < 66) {
                                     if (Temp.substr(Temp.substr(46).find(TemporaryData) + 46, TemporaryData.size()) == TemporaryData) {
                                         Information.resize(Information.size() + 1);
+                                        //Information[i].FileName = FileName;
                                         Information[i].ComputerLabel = (Temp.substr(0, Temp.find(" ")));
                                         Information[i].NumberClass = (Temp.substr(23, Temp.substr(23, 23).find(" ")));
                                         Information[i].ComputerFubricNumber = (Temp.substr(46));
@@ -151,6 +155,7 @@ vector<FullString> FindInfo(int element) {
                                         if (Flag) {
                                             int i = Information.size();
                                             Information.resize(Information.size() + 1);
+                                            //Information[i].FileName = FileName;
                                             Information[i].ComputerLabel = Temp.substr(0, Temp.find(" "));
                                             Information[i].NumberClass = "---";
                                             Information[i].ComputerFubricNumber = "---";
@@ -196,6 +201,7 @@ vector<FullString> FindInfo(int element) {
                                 if (!Temp.empty() && Temp.substr(23).find(TemporaryData) <= 26) {
                                     if (Temp.substr(Temp.substr(23, 26).find(TemporaryData) + 23, TemporaryData.size()) == TemporaryData) {
                                         Information.resize(Information.size() + 1);
+                                        //Information[i].FileName = FileName;
                                         Information[i].ComputerLabel = (Temp.substr(0, Temp.find(" ")));
                                         Information[i].NumberClass = "---";
                                         Information[i].ComputerFubricNumber = "---";
@@ -211,6 +217,7 @@ vector<FullString> FindInfo(int element) {
                                 if (!Temp.empty() && Temp.substr(50).find(TemporaryData) + 50 <= 53) {
                                     if (Temp.substr(Temp.substr(50).find(TemporaryData) + 50, TemporaryData.size()) == TemporaryData) {
                                         Information.resize(Information.size() + 1);
+                                        //Information[i].FileName = FileName;
                                         Information[i].ComputerLabel = (Temp.substr(0, Temp.find(" ")));
                                         Information[i].NumberClass = "---";
                                         Information[i].ComputerFubricNumber = "---";
@@ -352,7 +359,6 @@ void InfoInConsole() {
                 selected = (selected + 1) % 5;     // Цикличная прокрутка вниз
                 break;
             case KEY_RIGHT:
-                running = false;
                     FindInfo(selected + 1);
                 break;
             }

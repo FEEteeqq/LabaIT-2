@@ -20,6 +20,7 @@
 using namespace std;
 
 struct FullString {
+    string FileName;
     string ComputerLabel;
     string NumberClass;
     string ComputerFubricNumber;
@@ -29,16 +30,20 @@ struct FullString {
 
 void drawMenu(int selectedItem);
 bool performAction(int itemIndex);
+bool performActionWithFile(int itemIndex, string& FirstFile, string& SecondFile, string& ExitFile);
 bool CloseProgram();
 void Work();
+void InfoInFile();
 bool AddFileMenu();
-void createFile();
+bool AddFiles();
+string ExitFileName();
+string ChooseFile(string Path, bool OnlyName);
 void InfoInConsole();
 bool Start();
 void DrawInfoInConsoleMenu(int selectedItem);
-void CheckFileInFirstProgram();
+void CheckFileInFirstProgram(bool Start);
 void InfoInConsole();
-vector<FullString> FindInfo(int element, string Info);
+vector<FullString> FindInfo(int element);
 bool CreateFolder(std::string FolderNames);
 string GetDesktopPath();
 string TakePathToExeFile();
