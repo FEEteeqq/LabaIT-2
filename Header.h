@@ -29,7 +29,7 @@ struct FullString {
     string NumbersVneshUstroystv;
 };
 
-void drawMenu(int selectedItem);
+void DrawMenu(int selectedItem);
 void Work();
 void DrawInfoFileMenu(int selectedItem, string FirstFile, string SecondFile, string ExitFile, string Status);
 void InfoInFile();
@@ -38,14 +38,14 @@ void FindInfo(int element);
 void InfoInConsole();
 void CheckFileInFirstProgram(bool Start);
 void DrawAddFileMenu(int selectedItem);
-void drawExitMenu(int selectedItem);
+void DrawExitMenu(int selectedItem);
 
 bool CloseProgram();
 bool Start();
 bool AddFiles();
 bool AddFileMenu();
-bool performActionWithFile(int itemIndex, string& FirstFile, string& SecondFile, string& ExitFile);
-bool performAction(int itemIndex);
+bool PerformActionWithFile(int itemIndex, string& FirstFile, string& SecondFile, string& ExitFile);
+bool PerformAction(int itemIndex);
 bool CreateAndWriteFile(string FirstFile, string SecondFile, string ExitFile);
 bool CreateFolder(std::string FolderNames);
 

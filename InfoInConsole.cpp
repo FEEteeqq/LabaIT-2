@@ -17,7 +17,7 @@ void DrawInfoInConsoleMenu(int selectedItem) { // Функция отрисовки МЕНЮ ВЫБОРА 
     cout << endl << "Для возврата в главное меню нажмите клавишу ESC" << endl;
 }
 
-void FindInfo(int element) { // Функция 
+void FindInfo(int element) { // Функция нахождения информации для вывода в консоль
     system("cls");
     string TemporaryData;
     vector<FullString> Information;
@@ -284,7 +284,7 @@ void FindInfo(int element) { // Функция
     }
 }
 
-void InfoInConsole() {
+void InfoInConsole() { // Функция обработки нажатия клавиш в меню
     int selected = 0;
     bool running = true;
     while (running) {

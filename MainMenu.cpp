@@ -1,6 +1,6 @@
 #include "Header.h"
 
-void drawMenu(int selectedItem) {
+void DrawMenu(int selectedItem) { // Функция отрисовки ГЛАВНОГО МЕНЮ
     vector<string> menuItems = { "1. Вывод данных в консоль", "2. Вывод данных в файл", "3. Обновить списки с файлами", "4. Завершить работу программы" };
     system("cls");
     cout << "   ---- ГЛАВНОЕ МЕНЮ ----" << endl << endl;
@@ -14,7 +14,7 @@ void drawMenu(int selectedItem) {
     }
 }
 
-bool performAction(int itemIndex) {
+bool PerformAction(int itemIndex) { // Функция выбора действия в зависимости от выбранного пункта в главном меню
     system("cls");
     switch (itemIndex) {
     case 0:
@@ -34,12 +34,12 @@ bool performAction(int itemIndex) {
     }
 }
 
-void Work() {
+void Work() { // Функция обработки клавиш в главном меню
     bool running = Start();
     system("cls");
     int selected = 0;
     while (running) {
-        drawMenu(selected);
+        DrawMenu(selected);
         int key = _getch();
         // Обработка специальных клавиш (стрелки)
         if (key == 0 || key == 224) {
@@ -52,7 +52,7 @@ void Work() {
                 selected = (selected + 1) % 4;     // Цикличная прокрутка вниз
                 break;
             case KEY_RIGHT:
-                running = performAction(selected);
+                running = PerformAction(selected);
                 break;
             }
         }
@@ -62,7 +62,7 @@ void Work() {
                 running = CloseProgram();
             }
             else {
-                running = performAction(key - '1');
+                running = PerformAction(key - '1');
             }
         }
         // Выход на ESC
@@ -70,7 +70,7 @@ void Work() {
             running = CloseProgram();
         }
         else if (key == ENTER) {
-            running = performAction(selected);
+            running = PerformAction(selected);
         }
     }
 }

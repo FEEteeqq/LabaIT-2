@@ -39,7 +39,8 @@
         }
     }
     
-    void CheckFileInFirstProgram(bool Start) {
+    void CheckFileInFirstProgram(bool Start) { // Функция проверки существования папки первой программы 
+    // и в случае её существования происходит копирование файлов в новую программу
 
         std::string FirstPath = GetDesktopPath() + "\\Лабараторная по ИТ\\Файлы 1 типа"; // Путь к папке с файлами 1 типа
         std::string SecondPath = GetDesktopPath() + "\\Лабараторная по ИТ\\Файлы 2 типа"; // Путь к папке с файлами 2 типа
@@ -142,7 +143,7 @@
         }
     }
 
-    void DrawAddFileMenu(int selectedItem) {
+    void DrawAddFileMenu(int selectedItem) { // Функция отрисовки МЕНЮ ДОБАВЛЕНИЯ ФАЙЛОВ
         vector<string> menuItems = { "1. Поиск в папке первой программы", "2. Выбрать файл" };
         system("cls");
         cout << "   ---- МЕНЮ ДОБАВЛЕНИЯ ФАЙЛОВ ----  " << endl << endl;
@@ -158,7 +159,7 @@
         cout << endl << "Для возврата в главное меню нажмите клавишу ESC" << endl;
     }
 
-    bool AddFileMenu() {
+    bool AddFileMenu() { // Фунция обработки клавиш в меню добавления файлов
         int selected = 0;
         bool running = true;
         while (running) {
@@ -216,7 +217,7 @@
         return true;
     }
 
-    bool AddFiles() {
+    bool AddFiles() { // Функция добавления файлов
         string Path = ChooseFile(GetDesktopPath(), false);
         if (!Path.empty()) {
             if (Path.substr(Path.size() - 4) == ".txt") {
@@ -295,7 +296,7 @@
         }
     }
 
-    bool Start() {
+    bool Start() { // Функция создания и проверки целостности коренных файлов
         bool Flag = true;
         if (_chdir((TakePathToExeFile() + "\\LabaIT 2").c_str()) != 0) /*Проверка на существования папки*/ {
             if (_mkdir((TakePathToExeFile() + "\\LabaIT 2").c_str()) == 0) {
@@ -321,7 +322,7 @@
         return Flag;
     }
 
-    void drawExitMenu(int selectedItem) {
+    void DrawExitMenu(int selectedItem) { // Функция отрисовки меню завершения работы программы
         vector<string> menuItems = {"1. Нет!", "2. Да!"};
         system("cls");
         cout << "Вы точно хотите завершить работу программы?" << endl;
@@ -335,11 +336,11 @@
         }
     }
 
-    bool CloseProgram() {
+    bool CloseProgram() { // Обработка клавиш в меню завершения работы программы
         int selected = 0;
         bool running = true;
         while (running) {
-            drawExitMenu(selected);
+            DrawExitMenu(selected);
             int key = _getch();
             // Обработка специальных клавиш (стрелки)
             if (key == 0 || key == 224) {

@@ -1,6 +1,6 @@
 #include "Header.h"
 
-string ExitFileName() {
+string ExitFileName() { // Функция для написания имени выходного файла
     system("cls");
     cout << "Файл будет иметь расширение .txt" << endl;
     cout << "Имя файла не должно быть больше 40 символов" << endl;
@@ -69,26 +69,29 @@ string ExitFileName() {
     return NameFile;
 }
 
-string ChooseFile(string Path, bool OnlyName) {
-    // При выборе входных файлов необходимо проверять не пустые ли они (есть ли хотя-бы одна строчка после заголовка) и в случае если они пустые сообщить об этом пользователю и предложить ему
-    // на выбор: 1) Обновить входящие файлы (и сразу же проверить пустой ли теперь файл) 2) Выбрать другой файл 3) Вернуться в меню создания и записи выходного файла и скинуть выбранный файл
+string ChooseFile(string Path, bool OnlyName) { // Функция выбора файла через проводник
     char path[MAX_PATH];
     for (int i = 0; i < Path.size(); i++) {
         path[i] = Path[i];
     }
     path[Path.size()] = '\0';
     char filename[MAX_PATH];
-    OPENFILENAMEA ofn;
-    ZeroMemory(&filename, sizeof(filename));
-    ZeroMemory(&ofn, sizeof(ofn));
-    ofn.lStructSize = sizeof(ofn);
-    ofn.hwndOwner = NULL;
-    ofn.lpstrFilter = "Text Files\0*.txt\0";
-    ofn.lpstrFile = filename;
-    ofn.nMaxFile = MAX_PATH;
-    ofn.lpstrTitle = "Выберете необходимый файл";
-    ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST;
-    ofn.lpstrInitialDir = path; // Указать путь папки с файлами
+
+    OPENFILENAMEA ofn;// Объявление структуры, которая содержит параметры для диалогового окна "Открыть файл"
+    ZeroMemory(&filename, sizeof(filename));// Очистка (заполнение нулями) массива filename, чтобы в нем не было "мусора" перед использованием
+    ZeroMemory(&ofn, sizeof(ofn));// Очистка структуры ofn — это важно, чтобы все неиспользуемые поля были гарантированно обнулены
+    ofn.lStructSize = sizeof(ofn);// Указание размера структуры (Windows использует это для определения версии API)
+    ofn.hwndOwner = NULL;// Дескриптор окна-владельца (NULL означает, что у диалога нет родительского окна)
+    ofn.lpstrFilter = "Text Files\0*.txt\0"; // Фильтр типов файлов: в списке выбора будут отображаться только текстовые файлы (.txt) формат: "Название\0*.расширение\0"
+    ofn.lpstrFile = filename;// Указатель на буфер (массив), в который будет записан путь к выбранному файлу
+    ofn.nMaxFile = MAX_PATH;// Максимальный размер буфера под путь к файлу (обычно 260 символов)
+    ofn.lpstrTitle = "Выберете необходимый файл";// Заголовок, который будет отображаться в верхней части окна выбора файла
+    ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR; // Флаги поведения:
+    //OFN_DONTADDTORECENT — не добавлять выбранный файл в список "Недавние документы"
+    // OFN_FILEMUSTEXIST — пользователь может выбрать только реально существующий файл
+    // OFN_NOCHANGEDIR - возвращает рабочую директорию программы в исходное состояние после закрытия окна
+    ofn.lpstrInitialDir = path; // Начальная папка, которая откроется сразу при запуске диалога
+
     if (GetOpenFileNameA(&ofn)) {
         string FileName = filename;
         if (OnlyName) {
@@ -102,21 +105,51 @@ string ChooseFile(string Path, bool OnlyName) {
         system("cls");
         //Обработка ошибок и закрытия проводника без выбранного файла
         switch (CommDlgExtendedError()) {
-        case CDERR_DIALOGFAILURE: std::cout << "CDERR_DIALOGFAILURE\n";   break;
-        case CDERR_FINDRESFAILURE: std::cout << "CDERR_FINDRESFAILURE\n";  break;
-        case CDERR_INITIALIZATION: std::cout << "CDERR_INITIALIZATION\n";  break;
-        case CDERR_LOADRESFAILURE: std::cout << "CDERR_LOADRESFAILURE\n";  break;
-        case CDERR_LOADSTRFAILURE: std::cout << "CDERR_LOADSTRFAILURE\n";  break;
-        case CDERR_LOCKRESFAILURE: std::cout << "CDERR_LOCKRESFAILURE\n";  break;
-        case CDERR_MEMALLOCFAILURE: std::cout << "CDERR_MEMALLOCFAILURE\n"; break;
-        case CDERR_MEMLOCKFAILURE: std::cout << "CDERR_MEMLOCKFAILURE\n";  break;
-        case CDERR_NOHINSTANCE: std::cout << "CDERR_NOHINSTANCE\n";     break;
-        case CDERR_NOHOOK: std::cout << "CDERR_NOHOOK\n";          break;
-        case CDERR_NOTEMPLATE: std::cout << "CDERR_NOTEMPLATE\n";      break;
-        case CDERR_STRUCTSIZE: std::cout << "CDERR_STRUCTSIZE\n";      break;
-        case FNERR_BUFFERTOOSMALL: std::cout << "FNERR_BUFFERTOOSMALL\n";  break;
-        case FNERR_INVALIDFILENAME: std::cout << "FNERR_INVALIDFILENAME\n"; break;
-        case FNERR_SUBCLASSFAILURE: std::cout << "FNERR_SUBCLASSFAILURE\n"; break;
+        case CDERR_DIALOGFAILURE:
+            // Окно не смогло создаться
+            std::cout << "CDERR_DIALOGFAILURE\n"; break;
+        case CDERR_FINDRESFAILURE:
+            // Не удалось найти указанный шаблон (ресурс) окна в файле
+            std::cout << "CDERR_FINDRESFAILURE\n"; break;
+        case CDERR_LOADRESFAILURE:
+            // Ресурс найден, но произошла ошибка при его загрузке
+            std::cout << "CDERR_LOADRESFAILURE\n"; break;
+        case CDERR_LOADSTRFAILURE:
+            // Ошибка при попытке загрузить внутреннюю строку из ресурсов системы
+            std::cout << "CDERR_LOADSTRFAILURE\n"; break;
+        case CDERR_LOCKRESFAILURE:
+            // Не удалось заблокировать память для загруженного ресурса
+            std::cout << "CDERR_LOCKRESFAILURE\n"; break;
+        case CDERR_INITIALIZATION:
+            // Общая ошибка при попытке инициализировать диалог
+            std::cout << "CDERR_INITIALIZATION\n"; break;
+        case CDERR_MEMALLOCFAILURE:
+            // Недостаточно памяти для работы диалогового окна
+            std::cout << "CDERR_MEMALLOCFAILURE\n"; break;
+        case CDERR_MEMLOCKFAILURE:
+            // Ошибка при попытке заблокировать память для данных диалога
+            std::cout << "CDERR_MEMLOCKFAILURE\n"; break;
+        case CDERR_STRUCTSIZE:
+            // Неверно указан lStructSize (размер структуры не совпадает с ожидаемым)
+            std::cout << "CDERR_STRUCTSIZE\n"; break;
+        case CDERR_NOHINSTANCE:
+            // Указан флаг использования шаблона, но не передан hInstance приложения
+            std::cout << "CDERR_NOHINSTANCE\n"; break;
+        case CDERR_NOHOOK:
+            // Указан флаг использования Hook-функции, но указатель lpfnHook пуст
+            std::cout << "CDERR_NOHOOK\n"; break;
+        case CDERR_NOTEMPLATE:
+            // Указан флаг кастомного шаблона, но не передан сам шаблон lpTemplateName
+            std::cout << "CDERR_NOTEMPLATE\n"; break;
+        case FNERR_BUFFERTOOSMALL:
+            // Размер буфера lpstrFile слишком мал для выбранного пути (nMaxFile)
+            std::cout << "FNERR_BUFFERTOOSMALL\n"; break;
+        case FNERR_INVALIDFILENAME:
+            // Переданное имя файла содержит недопустимые символы или некорректно
+            std::cout << "FNERR_INVALIDFILENAME\n"; break;
+        case FNERR_SUBCLASSFAILURE:
+            // Не удалось подменить процедуру окна
+            std::cout << "FNERR_SUBCLASSFAILURE\n"; break;
         default: std::cout << "Файл не был выбран\n";
             cout << "Для возврата нажмите любую клавишу...";
             _getch();
@@ -125,7 +158,7 @@ string ChooseFile(string Path, bool OnlyName) {
     return "";
 }
 
-bool CreateAndWriteFile(string FirstFile, string SecondFile, string ExitFile) /* Функция для создания и заполнение(данными из выбранных файлов) выходного файла */  {
+bool CreateAndWriteFile(string FirstFile, string SecondFile, string ExitFile) /* Функция для создания и заполнение (данными из выбранных файлов) выходного файла */  {
     if ((FirstFile != "Не выбран" || SecondFile != "Не выбран") && ExitFile != "Название не задано") {
         vector<FullString> Data;
         if (FirstFile != "Не выбран") {
@@ -135,6 +168,7 @@ bool CreateAndWriteFile(string FirstFile, string SecondFile, string ExitFile) /*
             if (File.is_open()) {
                 string Temp;
                 while (getline(File, Temp)) {
+
                     if (i > -1 && !Temp.empty()) {
                         Data.resize(Data.size() + 1);
                         Data[i].ComputerLabel = (Temp.substr(0, 22));
@@ -172,36 +206,38 @@ bool CreateAndWriteFile(string FirstFile, string SecondFile, string ExitFile) /*
             if (File.is_open()) {
                 string Temp;
                 while (getline(File, Temp)) {
-                    bool Flag = true;
-                    for (int i = 0; i < Data.size(); i++) {
-                        if (!Temp.empty() && Temp.substr(0, 22) == Data[i].ComputerLabel) {
-                            Data[i].NumbersTerminal = Temp.substr(23, 25);
-                            Data[i].NumbersVneshUstroystv = Temp.substr(50);
-                            for (int j = Data[i].NumbersVneshUstroystv.size(); j < 41; j++) {
-                                Data[i].NumbersVneshUstroystv += " ";
-                            }
-                            Flag = false;
-                        }
-                    }
-                    if (Flag && !Temp.empty()) {
-                        if (i > j) {
-                            Data.resize(Data.size() + 1);
-                            Data[i].ComputerLabel = Temp.substr(0, 22);
-                            Data[i].NumberClass = "---";
-                            for (int j = Data[i].NumberClass.size(); j < 21; j++) {
-                                Data[i].NumberClass += " ";
-                            }
-                            Data[i].ComputerFubricNumber = "---";
-                            for (int j = Data[i].ComputerFubricNumber.size(); j < 23; j++) {
-                                Data[i].ComputerFubricNumber += " ";
-                            }
-                            Data[i].NumbersTerminal = Temp.substr(23, 25);
-                            Data[i].NumbersVneshUstroystv = Temp.substr(50);
-                            for (int j = Data[i].NumbersVneshUstroystv.size(); j < 41; j++) {
-                                Data[i].NumbersVneshUstroystv += " ";
+                    if (!Temp.empty()) {
+                        bool Flag = true;
+                        for (int i = 0; i < Data.size(); i++) {
+                            if (Temp.substr(0, 22) == Data[i].ComputerLabel) {
+                                Data[i].NumbersTerminal = Temp.substr(23, 25);
+                                Data[i].NumbersVneshUstroystv = Temp.substr(50);
+                                for (int j = Data[i].NumbersVneshUstroystv.size(); j < 41; j++) {
+                                    Data[i].NumbersVneshUstroystv += " ";
+                                }
+                                Flag = false;
                             }
                         }
-                        i++;
+                        if (Flag) {
+                            if (i > j) {
+                                Data.resize(Data.size() + 1);
+                                Data[i].ComputerLabel = Temp.substr(0, 22);
+                                Data[i].NumberClass = "---";
+                                for (int j = Data[i].NumberClass.size(); j < 21; j++) {
+                                    Data[i].NumberClass += " ";
+                                }
+                                Data[i].ComputerFubricNumber = "---";
+                                for (int j = Data[i].ComputerFubricNumber.size(); j < 23; j++) {
+                                    Data[i].ComputerFubricNumber += " ";
+                                }
+                                Data[i].NumbersTerminal = Temp.substr(23, 25);
+                                Data[i].NumbersVneshUstroystv = Temp.substr(50);
+                                for (int j = Data[i].NumbersVneshUstroystv.size(); j < 41; j++) {
+                                    Data[i].NumbersVneshUstroystv += " ";
+                                }
+                            }
+                            i++;
+                        }
                     }
                 }
                 File.close();
@@ -231,7 +267,8 @@ bool CreateAndWriteFile(string FirstFile, string SecondFile, string ExitFile) /*
     }
 }
 
-void DrawInfoFileMenu(int selectedItem, string FirstFile, string SecondFile, string ExitFile, string Status) {
+void DrawInfoFileMenu(int selectedItem, string FirstFile, string SecondFile, string ExitFile, string Status) { 
+    // Функция отрисовки МЕНЮ ВЫВОДА ДАННЫХ В ФАЙЛ
     vector<string> menuItems = { "1. Файл первого типа: " + FirstFile, "2. Файл второго типа: " + SecondFile, "3. Выходной файл: " + ExitFile, "4. Создать и заполнить файл" + Status};
     system("cls");
     cout << "   ---- МЕНЮ ВЫВОДА ДАННЫХ В ФАЙЛ ----" << endl << endl;
@@ -247,7 +284,8 @@ void DrawInfoFileMenu(int selectedItem, string FirstFile, string SecondFile, str
     cout << endl << "Для возврата в главное меню нажмите клавишу ESC" << endl;
 }
 
-bool performActionWithFile(int itemIndex, string& FirstFile, string& SecondFile, string& ExitFile) {
+bool PerformActionWithFile(int itemIndex, string& FirstFile, string& SecondFile, string& ExitFile) { 
+    // Функция обработки выбранного пункта меню вывода данных в файл
     system("cls");
     switch (itemIndex) {
     case 0:
@@ -280,7 +318,7 @@ bool performActionWithFile(int itemIndex, string& FirstFile, string& SecondFile,
     }
 }
 
-void InfoInFile() {
+void InfoInFile() { // Функция обработки клавиш в меню вывода данных в файл
     system("cls");
     int selected = 0;
     bool running = true;
@@ -308,13 +346,13 @@ void InfoInFile() {
                 selected = (selected + 1) % 4;     // Цикличная прокрутка вниз
                 break;
             case KEY_RIGHT:
-                running = performActionWithFile(selected, FirstFile, SecondFile, ExitFile);
+                running = PerformActionWithFile(selected, FirstFile, SecondFile, ExitFile);
                 break;
             }
         }
         // Обработка цифровых клавиш '1' - '4' 
         else if (key >= '1' && key <= '4') {
-            running = performActionWithFile(key - '1', FirstFile, SecondFile, ExitFile);
+            running = PerformActionWithFile(key - '1', FirstFile, SecondFile, ExitFile);
         }
         // Выход на ESC
         else if (key == ESC) {
@@ -322,7 +360,7 @@ void InfoInFile() {
         }
         // Обработка клавиши Enter
         else if (key == ENTER) {
-            running = performActionWithFile(selected, FirstFile, SecondFile, ExitFile);
+            running = PerformActionWithFile(selected, FirstFile, SecondFile, ExitFile);
         }
     }
 }
