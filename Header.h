@@ -20,8 +20,7 @@
 using namespace std;
 
 struct FullString {
-    string FirstFileName;
-    string SecondFileName;
+    string FileName;
     string ComputerLabel;
     string NumberClass;
     string ComputerFubricNumber;
@@ -29,27 +28,22 @@ struct FullString {
     string NumbersVneshUstroystv;
 };
 
-void DrawMenu(int selectedItem);
-void Work();
-void DrawInfoFileMenu(int selectedItem, string FirstFile, string SecondFile, string ExitFile, string Status);
-void InfoInFile();
-void DrawInfoInConsoleMenu(int selectedItem);
-void FindInfo(int element);
-void InfoInConsole();
-void CheckFileInFirstProgram(bool Start);
-void DrawAddFileMenu(int selectedItem);
-void DrawExitMenu(int selectedItem);
-
+void drawMenu(int selectedItem);
+bool performAction(int itemIndex);
+bool performActionWithFile(int itemIndex, string& FirstFile, string& SecondFile, string& ExitFile);
 bool CloseProgram();
-bool Start();
-bool AddFiles();
+void Work();
+void InfoInFile();
 bool AddFileMenu();
-bool PerformActionWithFile(int itemIndex, string& FirstFile, string& SecondFile, string& ExitFile);
-bool PerformAction(int itemIndex);
-bool CreateAndWriteFile(string FirstFile, string SecondFile, string ExitFile);
-bool CreateFolder(std::string FolderNames);
-
-string GetDesktopPath();
-string TakePathToExeFile();
+bool AddFiles();
 string ExitFileName();
 string ChooseFile(string Path, bool OnlyName);
+void InfoInConsole();
+bool Start();
+void DrawInfoInConsoleMenu(int selectedItem);
+void CheckFileInFirstProgram(bool Start);
+void InfoInConsole();
+vector<FullString> FindInfo(int element);
+bool CreateFolder(std::string FolderNames);
+string GetDesktopPath();
+string TakePathToExeFile();
