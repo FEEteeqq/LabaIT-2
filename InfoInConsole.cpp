@@ -79,7 +79,7 @@ void ChoiseFilesPath() { // Функция обработки клавиш в меню выбора файлов для вы
         }
         // Обработка цифровых клавиш '1' - '3' 
         else if (key >= '1' && key <= '3') {
-                running = PerformActionChoisesFilesMenu(key - '1', FirstFile, SecondFile, Permission);
+            running = PerformActionChoisesFilesMenu(key - '1', FirstFile, SecondFile, Permission);
         }
         // Выход на ESC
         else if (key == ESC) {
@@ -93,8 +93,7 @@ void ChoiseFilesPath() { // Функция обработки клавиш в меню выбора файлов для вы
 
 void DrawInfoInConsoleMenu(int selectedItem) { // Функция отрисовки МЕНЮ ВЫБОРА ПОЛЯ ДЛЯ ПОИСКА ИНФОРМАЦИИ
     vector<string> menuItems = { "1. Марка ЭВМ", "2. Номер кафедры",
-        "3. Заводской номер ЭВМ", "4. Количество терминалов", "5. Количество внешних запоминающих устройств"};
-
+        "3. Заводской номер ЭВМ", "4. Количество терминалов", "5. Количество внешних запоминающих устройств" };
     system("cls");
     cout << "   ---- МЕНЮ ВЫБОРА ПОЛЯ ДЛЯ ПОИСКА ИНФОРМАЦИИ ----    " << endl << endl;
     cout << "По какому полю будет поиск информации?" << endl;
@@ -113,7 +112,6 @@ void FindInfo(int element, string FirstFile, string SecondFile) { // Функция нах
     system("cls");
     string TemporaryData;
     vector<FullString> Information;
-
     cout << "Для возврата в меню выбора пункта поиска ничего не вводите и нажмите клавишу Enter" << endl;
 
     switch (element) {
@@ -143,7 +141,6 @@ void FindInfo(int element, string FirstFile, string SecondFile) { // Функция нах
     if (TemporaryData.empty()) {} /*Возврат в меню выбора пункта для поиска*/
     else {
         if (element < 4) {
-
             std::string FirstPath = TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа\\"; // Путь к папке с файлами 1 типа
             std::string SecondPath = TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа\\"; // Путь к папке с файлами 2 типа
             int i = 0;
@@ -244,7 +241,6 @@ void FindInfo(int element, string FirstFile, string SecondFile) { // Функция нах
             }
         }
         else if (element > 3) {
-
             std::string FirstPath = TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа\\"; // Путь к папке с файлами 1 типа
             std::string SecondPath = TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа\\"; // Путь к папке с файлами 2 типа
             int i = 0;
@@ -331,7 +327,6 @@ void FindInfo(int element, string FirstFile, string SecondFile) { // Функция нах
             bool running = true;
             int Pages = 0;
             while (running) {
-
                 system("cls");
                 cout << "Найдено совпадений: " << Information.size() << endl << endl;
                 cout << "Файл 1 типа: " << Information[Pages].FirstFileName << endl;
@@ -343,9 +338,7 @@ void FindInfo(int element, string FirstFile, string SecondFile) { // Функция нах
                 cout << "Колличество внешних запоминающий устройств: " << Information[Pages].NumbersVneshUstroystv << endl << endl;
                 cout << "Страница " << (Pages + 1) << " из " << Information.size() << endl;
                 cout << "Для переключения страниц используйте клавиши стрелочек влево и вправо, для выхода нажмите клавишу ESC" << endl;
-
                 int key = _getch();
-
                 // Обработка специальных клавиш (стрелки)
                 if (key == 0 || key == 224) {
                     key = _getch();
@@ -358,19 +351,15 @@ void FindInfo(int element, string FirstFile, string SecondFile) { // Функция нах
                         break;
                     }
                 }
-
                 else if (key == ESC) {
                     running = false;
                 }
-
             }
         }
-
         else if ((Information.size() == 1 && !Information[0].ComputerLabel.empty()) || (Information.size() == 2 && Information[1].ComputerLabel.empty())) {
             bool running = true;
             int i = 0;
             while (running) {
-
                 system("cls");
                 cout << "Файл 1 типа: " << Information[i].FirstFileName << endl;
                 cout << "Файл 2 типа: " << Information[i].SecondFileName << endl << endl;
@@ -378,7 +367,7 @@ void FindInfo(int element, string FirstFile, string SecondFile) { // Функция нах
                 cout << "Номер кафедры: " << Information[i].NumberClass << endl;
                 cout << "Заводской номер ЭВМ: " << Information[i].ComputerFubricNumber << endl;
                 cout << "Колличество терминалов: " << Information[i].NumbersTerminal << endl;
-                cout << "Колличество внешних запоминающий устройств: " << Information[i].NumbersVneshUstroystv << endl;
+                cout << "Колличество внешних запоминающий устройств: " << Information[i].NumbersVneshUstroystv << endl << endl;
                 cout << "Для выхода нажмите клавишу ESC" << endl;
                 int key = _getch();
                 if (key == ESC) {
@@ -386,25 +375,19 @@ void FindInfo(int element, string FirstFile, string SecondFile) { // Функция нах
                 }
             }
         }
-
         else {
             cout << "Совпадений не найдено, для выхода нажмите любую клавишу...";
             _getch();
         }
     }
-
-    return Information;
 }
 
 bool InfoInConsole(string FirstFile, string SecondFile) { // Функция обработки нажатия клавиш в меню
     int selected = 0;
     bool running = true;
-
     while (running) {
         DrawInfoInConsoleMenu(selected);
-
         int key = _getch();
-
         // Обработка специальных клавиш (стрелки)
         if (key == 0 || key == 224) {
             key = _getch();
@@ -438,15 +421,13 @@ bool InfoInConsole(string FirstFile, string SecondFile) { // Функция обработки н
                 FindInfo(5, FirstFile, SecondFile);
             }
         }
-
         // Выход на ESC
         else if (key == ESC) {
             running = false;
             return true;
         }
-
+        // Обработка клавиши Enter
         else if (key == ENTER) {
-            //running = false;
             if (selected == 0) {
                 FindInfo(selected + 1, FirstFile, SecondFile);
             }

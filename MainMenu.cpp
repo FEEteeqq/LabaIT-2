@@ -1,7 +1,5 @@
 #include "Header.h"
 
-
-
 void drawMenu(int selectedItem) {
 
     vector<string> menuItems = { "1. Вывод данных в консоль", "2. Вывод данных в файл", "3. Обновить списки с файлами", "4. Завершить работу программы" };
