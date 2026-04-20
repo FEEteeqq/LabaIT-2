@@ -18,7 +18,7 @@ bool PerformAction(int itemIndex) { // Ôóíêöèÿ âûáîğà äåéñòâèÿ â çàâèñèìîñòè îò 
     system("cls");
     switch (itemIndex) {
     case 0:
-        InfoInConsole();
+        ChoiseFilesPath();
         return true;
         break;
     case 1:
@@ -58,12 +58,7 @@ void Work() { // Ôóíêöèÿ îáğàáîòêè êëàâèø â ãëàâíîì ìåíş
         }
         // Îáğàáîòêà öèôğîâûõ êëàâèø '1' - '4' 
         else if (key >= '1' && key <= '4') {
-            if (key - '1' == 3) {
-                running = CloseProgram();
-            }
-            else {
                 running = PerformAction(key - '1');
-            }
         }
         // Âûõîä íà ESC
         else if (key == ESC) {
