@@ -1,9 +1,7 @@
 #include "Header.h"
 
-void drawMenu(int selectedItem) {
-
+void DrawMenu(int selectedItem) { // Функция отрисовки ГЛАВНОГО МЕНЮ
     vector<string> menuItems = { "1. Вывод данных в консоль", "2. Вывод данных в файл", "3. Обновить списки с файлами", "4. Завершить работу программы" };
-
     system("cls");
     cout << "   ---- ГЛАВНОЕ МЕНЮ ----" << endl << endl;
     for (int i = 0; i < menuItems.size(); ++i) {
@@ -23,7 +21,7 @@ bool PerformAction(int itemIndex) { // Функция выбора действия в зависимости от 
         ChoiseFilesPath();
         return true;
         break;
-    case 1: 
+    case 1:
         InfoInFile();
         return true;
         break;
@@ -36,11 +34,10 @@ bool PerformAction(int itemIndex) { // Функция выбора действия в зависимости от 
     }
 }
 
-void Work() {
+void Work() { // Функция обработки клавиш в главном меню
     bool running = Start();
     system("cls");
     int selected = 0;
-
     while (running) {
         DrawMenu(selected);
         int key = _getch();
@@ -61,7 +58,7 @@ void Work() {
         }
         // Обработка цифровых клавиш '1' - '4' 
         else if (key >= '1' && key <= '4') {
-                running = PerformAction(key - '1');
+            running = PerformAction(key - '1');
         }
         // Выход на ESC
         else if (key == ESC) {
