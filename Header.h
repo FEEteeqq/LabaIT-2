@@ -10,12 +10,12 @@
 #include <filesystem>
 #include <shlobj.h>
 
-#define KEY_UP 72
-#define KEY_DOWN 80
-#define KEY_RIGHT 77
-#define KEY_LEFT 75
-#define ESC 27
-#define ENTER 13
+const int KEY_UP = 72;
+const int KEY_DOWN = 80;
+const int KEY_RIGHT = 77;
+const int KEY_LEFT = 75;
+const int ESC = 27;
+const int ENTER = 13;
 
 using namespace std;
 
@@ -50,7 +50,6 @@ bool PerformActionWithFile(int itemIndex, string& FirstFile, string& SecondFile,
 bool PerformAction(int itemIndex);
 bool CreateAndWriteFile(string FirstFile, string SecondFile, string ExitFile);
 bool CreateFolder(std::string FolderNames);
-bool PerformAction(int itemIndex, string& FirstFile, string& SecondFile, string Permission);
 bool PerformActionChoisesFilesMenu(int itemIndex, string& FirstFile, string& SecondFile, string Permission);
 
 string GetDesktopPath();

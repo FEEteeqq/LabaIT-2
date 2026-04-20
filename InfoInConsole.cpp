@@ -73,20 +73,20 @@ void ChoiseFilesPath() { // Ôóíêöèÿ îáğàáîòêè êëàâèø â ìåíş âûáîğà ôàéëîâ äëÿ âû
                 selected = (selected + 1) % 3;     // Öèêëè÷íàÿ ïğîêğóòêà âíèç
                 break;
             case KEY_RIGHT:
-                running = PerformAction(selected, FirstFile, SecondFile, Permission);
+                running = PerformActionChoisesFilesMenu(selected, FirstFile, SecondFile, Permission);
                 break;
             }
         }
         // Îáğàáîòêà öèôğîâûõ êëàâèø '1' - '3' 
         else if (key >= '1' && key <= '3') {
-                running = PerformAction(key - '1', FirstFile, SecondFile, Permission);
+                running = PerformActionChoisesFilesMenu(key - '1', FirstFile, SecondFile, Permission);
         }
         // Âûõîä íà ESC
         else if (key == ESC) {
             running = false;
         }
         else if (key == ENTER) {
-            running = PerformAction(selected, FirstFile, SecondFile, Permission);
+            running = PerformActionChoisesFilesMenu(selected, FirstFile, SecondFile, Permission);
         }
     }
 }
