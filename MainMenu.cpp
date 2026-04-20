@@ -21,8 +21,8 @@ void drawMenu(int selectedItem) {
 bool PerformAction(int itemIndex) { // Ôóíêöèÿ âûáîğà äåéñòâèÿ â çàâèñèìîñòè îò âûáğàííîãî ïóíêòà â ãëàâíîì ìåíş
     system("cls");
     switch (itemIndex) {
-    case 0: 
-        InfoInConsole();
+    case 0:
+        ChoiseFilesPath();
         return true;
         break;
     case 1: 
@@ -63,12 +63,7 @@ void Work() {
         }
         // Îáğàáîòêà öèôğîâûõ êëàâèø '1' - '4' 
         else if (key >= '1' && key <= '4') {
-            if (key - '1' == 3) {
-                running = CloseProgram();
-            }
-            else {
-                running = performAction(key - '1');
-            }
+                running = PerformAction(key - '1');
         }
         // Âûõîä íà ESC
         else if (key == ESC) {
