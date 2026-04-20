@@ -20,7 +20,8 @@ const int ENTER = 13;
 using namespace std;
 
 struct FullString {
-    string FileName;
+    string FirstFileName;
+    string SecondFileName;
     string ComputerLabel;
     string NumberClass;
     string ComputerFubricNumber;
@@ -28,18 +29,10 @@ struct FullString {
     string NumbersVneshUstroystv;
 };
 
-void drawMenu(int selectedItem);
-bool performAction(int itemIndex);
-bool performActionWithFile(int itemIndex, string& FirstFile, string& SecondFile, string& ExitFile);
-bool CloseProgram();
+void DrawMenu(int selectedItem);
 void Work();
+void DrawInfoFileMenu(int selectedItem, string FirstFile, string SecondFile, string ExitFile, string Status);
 void InfoInFile();
-bool AddFileMenu();
-bool AddFiles();
-string ExitFileName();
-string ChooseFile(string Path, bool OnlyName);
-void InfoInConsole();
-bool Start();
 void DrawInfoInConsoleMenu(int selectedItem);
 void FindInfo(int element, string FirstFile, string SecondFile);
 void CheckFileInFirstProgram(bool Start);
@@ -61,3 +54,5 @@ bool PerformActionChoisesFilesMenu(int itemIndex, string& FirstFile, string& Sec
 
 string GetDesktopPath();
 string TakePathToExeFile();
+string ExitFileName();
+string ChooseFile(string Path, bool OnlyName);
