@@ -1,7 +1,12 @@
 #include "Header.h"
 
-void DrawChoiseFilesMenu(int selectedItem, string FirstFilePath, string SecondFilePath, string Permission) { // Функция отрисовки МЕНЮ ВЫБОРА ФАЙЛОВ ДЛЯ ПОИСКА ДАННЫХ
-    vector<string> menuItems = { "1. Файл первого типа: " + FirstFilePath, "2. Файл второго типа: " + SecondFilePath, "3. Продолжить " + Permission };
+string consoleFirstFilePath = "";
+string consoleSecondFilePath = "";
+string consoleFirstFileName = "Не выбран";
+string consoleSecondFileName = "Не выбран";
+
+void DrawChoiseFilesMenu(int selectedItem, string Permission) { // Функция отрисовки МЕНЮ ВЫБОРА ФАЙЛОВ ДЛЯ ПОИСКА ДАННЫХ
+    vector<string> menuItems = { "1. Файл первого типа: " + consoleFirstFileName, "2. Файл второго типа: " + consoleSecondFileName, "3. Продолжить " + Permission };
     system("cls");
     cout << "   ---- МЕНЮ ВЫБОРА ФАЙЛОВ ДЛЯ ПОИСКА ----" << endl << endl;
     cout << "Для продолжения необходимо выбрать файлы по которым будет осуществляться поиск" << endl << endl;
@@ -17,26 +22,100 @@ void DrawChoiseFilesMenu(int selectedItem, string FirstFilePath, string SecondFi
     cout << endl << "Для возврата в главное меню нажмите клавишу ESC" << endl;
 }
 
-bool PerformActionChoisesFilesMenu(int itemIndex, string& FirstFile, string& SecondFile, string Permission) { // Функция выбора действия в зависимости от выбранного пункта в меню выбора файлов
+bool PerformActionChoisesFilesMenu(int itemIndex, string Permission) { // Функция выбора действия в зависимости от выбранного пункта в меню выбора файлов
     system("cls");
     switch (itemIndex) {
     case 0:
-        FirstFile = ChooseFile(TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа", true);
-        if (FirstFile.empty()) {
-            FirstFile = "Не выбран";
+        consoleFirstFilePath = ChooseFile(TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа", false);
+        if (consoleFirstFilePath.empty()) {
+            consoleFirstFileName = "Не выбран";
+        }
+        else {
+            ifstream File(consoleFirstFilePath);
+            string Temp;
+            int i = 0;
+            while (getline(File, Temp)) {
+                if (i == 0) {
+                    if (Temp != "Марка ЭВМ              Номера кафедры         Заводской номер ЭВМ") {
+                        system("cls");
+                        cout << "Выбранный файл не является файлом первого типа, необходимо выбрать другой файл" << endl;
+                        cout << "Для продолжения нажмите любую клавишу..." << endl;
+                        _getch();
+                        File.close();
+                        consoleFirstFilePath = "";
+                        consoleFirstFileName = "Не выбран";
+                        break;
+                    }
+                }
+                if (!Temp.empty()) {
+                    i++;
+                }
+                else {
+                    system("cls");
+                    cout << "Выбранный файл пустой, необходимо выбрать другой файл" << endl;
+                    cout << "Для продолжения нажмите любую клавишу..." << endl;
+                    _getch();
+                    File.close();
+                    consoleFirstFilePath = "";
+                    consoleFirstFileName = "Не выбран";
+                    break;
+                }
+                if (i > 1) {
+                    consoleFirstFileName = consoleFirstFilePath.substr(consoleFirstFilePath.find_last_of("/\\") + 1);
+                    File.close();
+                    break;
+                }
+            }
         }
         return true;
         break;
     case 1:
-        SecondFile = ChooseFile(TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа", true);
-        if (SecondFile.empty()) {
-            SecondFile = "Не выбран";
+        consoleSecondFilePath = ChooseFile(TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа", false);
+        if (consoleSecondFilePath.empty()) {
+            consoleSecondFileName = "Не выбран";
+        }
+        else {
+            ifstream File(consoleSecondFilePath);
+            string Temp;
+            int i = 0;
+            while (getline(File, Temp)) {
+                if (i == 0) {
+                    if (Temp != "Марка ЭВМ              Количество терминалов      Количество внешних запоминающих устройств") {
+                        system("cls");
+                        cout << "Выбранный файл не является файлом второго типа, необходимо выбрать другой файл" << endl;
+                        cout << "Для продолжения нажмите любую клавишу..." << endl;
+                        _getch();
+                        File.close();
+                        consoleSecondFilePath = "";
+                        consoleSecondFileName = "Не выбран";
+                        break;
+                    }
+                }
+                if (!Temp.empty()) {
+                    i++;
+                }
+                else {
+                    system("cls");
+                    cout << "Выбранный файл пустой, необходимо выбрать другой файл" << endl;
+                    cout << "Для продолжения нажмите любую клавишу..." << endl;
+                    _getch();
+                    File.close();
+                    consoleSecondFilePath = "";
+                    consoleSecondFileName = "Не выбран";
+                    break;
+                }
+                if (i > 1) {
+                    consoleSecondFileName = consoleSecondFilePath.substr(consoleSecondFilePath.find_last_of("/\\") + 1);
+                    File.close();
+                    break;
+                }
+            }
         }
         return true;
         break;
     case 2:
         if (Permission == "(Доступно)") {
-            return InfoInConsole(FirstFile, SecondFile);
+            return InfoInConsole();
             break;
         }
         else {
@@ -50,17 +129,15 @@ void ChoiseFilesPath() { // Функция обработки клавиш в меню выбора файлов для вы
     system("cls");
     bool running = true;
     int selected = 0;
-    string FirstFile = "Не выбран";
-    string SecondFile = "Не выбран";
     string Permission = "(Недоступно)";
     while (running) {
-        if (FirstFile != "Не выбран" && SecondFile != "Не выбран") {
+        if (consoleFirstFileName != "Не выбран" && consoleSecondFileName != "Не выбран") {
             Permission = "(Доступно)";
         }
         else {
             Permission = "(Недоступно)";
         }
-        DrawChoiseFilesMenu(selected, FirstFile, SecondFile, Permission);
+        DrawChoiseFilesMenu(selected, Permission);
         int key = _getch();
         // Обработка специальных клавиш (стрелки)
         if (key == 0 || key == 224) {
@@ -73,20 +150,20 @@ void ChoiseFilesPath() { // Функция обработки клавиш в меню выбора файлов для вы
                 selected = (selected + 1) % 3;     // Цикличная прокрутка вниз
                 break;
             case KEY_RIGHT:
-                running = PerformActionChoisesFilesMenu(selected, FirstFile, SecondFile, Permission);
+                running = PerformActionChoisesFilesMenu(selected, Permission);
                 break;
             }
         }
         // Обработка цифровых клавиш '1' - '3' 
         else if (key >= '1' && key <= '3') {
-            running = PerformActionChoisesFilesMenu(key - '1', FirstFile, SecondFile, Permission);
+            running = PerformActionChoisesFilesMenu(key - '1', Permission);
         }
         // Выход на ESC
         else if (key == ESC) {
             running = false;
         }
         else if (key == ENTER) {
-            running = PerformActionChoisesFilesMenu(selected, FirstFile, SecondFile, Permission);
+            running = PerformActionChoisesFilesMenu(selected, Permission);
         }
     }
 }
@@ -108,7 +185,7 @@ void DrawInfoInConsoleMenu(int selectedItem) { // Функция отрисовки МЕНЮ ВЫБОРА 
     cout << endl << "Для возврата в главное меню нажмите клавишу ESC" << endl;
 }
 
-void FindInfo(int element, string FirstFile, string SecondFile) { // Функция нахождения информации для вывода в консоль
+void FindInfo(int element) { // Функция нахождения информации для вывода в консоль
     system("cls");
     string TemporaryData;
     vector<FullString> Information;
@@ -141,10 +218,8 @@ void FindInfo(int element, string FirstFile, string SecondFile) { // Функция нах
     if (TemporaryData.empty()) {} /*Возврат в меню выбора пункта для поиска*/
     else {
         if (element < 4) {
-            std::string FirstPath = TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа\\"; // Путь к папке с файлами 1 типа
-            std::string SecondPath = TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа\\"; // Путь к папке с файлами 2 типа
             int i = 0;
-            ifstream File(FirstPath + FirstFile);
+            ifstream File(consoleFirstFilePath);
             if (File.is_open()) {
                 string Temp;
                 while (getline(File, Temp)) {
@@ -153,7 +228,7 @@ void FindInfo(int element, string FirstFile, string SecondFile) { // Функция нах
                         if (!Temp.empty() && Temp.find(TemporaryData) < 23) {
                             if (Temp.substr(Temp.substr(0, 23).find(TemporaryData), TemporaryData.size()) == TemporaryData) {
                                 Information.resize(Information.size() + 1);
-                                Information[i].FirstFileName = FirstFile;
+                                Information[i].FirstFileName = consoleFirstFileName;
                                 Information[i].SecondFileName = "---";
                                 Information[i].ComputerLabel = (Temp.substr(0, Temp.find(" ")));
                                 Information[i].NumberClass = (Temp.substr(23, Temp.substr(23, 23).find(" ")));
@@ -168,7 +243,7 @@ void FindInfo(int element, string FirstFile, string SecondFile) { // Функция нах
                         if (!Temp.empty() && Temp.substr(23).find(TemporaryData) < 23) {
                             if (Temp.substr(23, Temp.substr(23, 14).find(" ")) == TemporaryData) {
                                 Information.resize(Information.size() + 1);
-                                Information[i].FirstFileName = FirstFile;
+                                Information[i].FirstFileName = consoleFirstFileName;
                                 Information[i].SecondFileName = "---";
                                 Information[i].ComputerLabel = (Temp.substr(0, Temp.find(" ")));
                                 Information[i].NumberClass = (Temp.substr(23, Temp.substr(23, 23).find(" ")));
@@ -183,7 +258,7 @@ void FindInfo(int element, string FirstFile, string SecondFile) { // Функция нах
                         if (!Temp.empty() && (Temp.substr(46).find(TemporaryData) + 46) >= 46 && (Temp.substr(46).find(TemporaryData) + 46) < 66) {
                             if (Temp.substr(Temp.substr(46).find(TemporaryData) + 46, TemporaryData.size()) == TemporaryData) {
                                 Information.resize(Information.size() + 1);
-                                Information[i].FirstFileName = FirstFile;
+                                Information[i].FirstFileName = consoleFirstFileName;
                                 Information[i].SecondFileName = "---";
                                 Information[i].ComputerLabel = (Temp.substr(0, Temp.find(" ")));
                                 Information[i].NumberClass = (Temp.substr(23, Temp.substr(23, 23).find(" ")));
@@ -204,14 +279,14 @@ void FindInfo(int element, string FirstFile, string SecondFile) { // Функция нах
                 cout << "Для продолжения нажмите любую клавишу" << endl;
                 _getch();
             }
-            ifstream SecFile(SecondPath + SecondFile);
+            ifstream SecFile(consoleSecondFilePath);
             if (SecFile.is_open()) {
                 string Temp;
                 while (getline(SecFile, Temp)) {
                     bool Flag = true;
                     for (int i = 0; i < Information.size(); i++) { // Если находим совпадение по марке ЭВМ до заполняем пустые поля
                         if (!Temp.empty() && Temp.substr(0, Temp.find(" ")) == Information[i].ComputerLabel) {
-                            Information[i].SecondFileName = SecondFile;
+                            Information[i].SecondFileName = consoleSecondFileName;
                             Information[i].NumbersTerminal = Temp.substr(23, Temp.substr(23).find(" "));
                             Information[i].NumbersVneshUstroystv = Temp.substr(50);
                             Flag = false;
@@ -221,7 +296,7 @@ void FindInfo(int element, string FirstFile, string SecondFile) { // Функция нах
                         if (!Temp.empty() && Temp.find(TemporaryData) < 23) {
                             int i = Information.size();
                             Information.resize(Information.size() + 1);
-                            Information[i].SecondFileName = SecondFile;
+                            Information[i].SecondFileName = consoleSecondFileName;
                             Information[i].FirstFileName = "---";
                             Information[i].ComputerLabel = Temp.substr(0, Temp.find(" "));
                             Information[i].NumberClass = "---";
@@ -241,10 +316,8 @@ void FindInfo(int element, string FirstFile, string SecondFile) { // Функция нах
             }
         }
         else if (element > 3) {
-            std::string FirstPath = TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа\\"; // Путь к папке с файлами 1 типа
-            std::string SecondPath = TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа\\"; // Путь к папке с файлами 2 типа
             int i = 0;
-            ifstream SecFile(SecondPath + SecondFile);
+            ifstream SecFile(consoleSecondFilePath);
             if (SecFile.is_open()) {
                 string Temp;
                 while (getline(SecFile, Temp)) {
@@ -254,7 +327,7 @@ void FindInfo(int element, string FirstFile, string SecondFile) { // Функция нах
                             if (Temp.substr(23, Temp.substr(23, 3).find(" ")) == TemporaryData) {
                                 Information.resize(Information.size() + 1);
                                 Information[i].FirstFileName = "---";
-                                Information[i].SecondFileName = SecondFile;
+                                Information[i].SecondFileName = consoleSecondFileName;
                                 Information[i].ComputerLabel = (Temp.substr(0, Temp.find(" ")));
                                 Information[i].NumberClass = "---";
                                 Information[i].ComputerFubricNumber = "---";
@@ -269,7 +342,7 @@ void FindInfo(int element, string FirstFile, string SecondFile) { // Функция нах
                             if (Temp.substr(50, Temp.substr(50, 3).find(" ")) == TemporaryData) {
                                 Information.resize(Information.size() + 1);
                                 Information[i].FirstFileName = "---";
-                                Information[i].SecondFileName = SecondFile;
+                                Information[i].SecondFileName = consoleSecondFileName;
                                 Information[i].ComputerLabel = (Temp.substr(0, Temp.find(" ")));
                                 Information[i].NumberClass = "---";
                                 Information[i].ComputerFubricNumber = "---";
@@ -289,22 +362,22 @@ void FindInfo(int element, string FirstFile, string SecondFile) { // Функция нах
                 cout << "Для продолжения нажмите любую клавишу" << endl;
                 _getch();
             }
-            ifstream File(FirstPath + FirstFile);
+            ifstream File(consoleSecondFilePath);
             if (File.is_open()) {
                 string Temp;
                 while (getline(File, Temp)) {
                     for (int i = 0; i < Information.size(); i++) {
                         if (!Temp.empty() && Temp.substr(0, Temp.find(" ")) == Information[i].ComputerLabel) {
                             if (Information[i].ComputerFubricNumber == "---") {
-                                Information[i].FirstFileName = FirstFile;
+                                Information[i].FirstFileName = consoleFirstFileName;
                                 Information[i].NumberClass = Temp.substr(23, Temp.substr(23).find(" "));
                                 Information[i].ComputerFubricNumber = Temp.substr(46);
                                 break;
                             }
                             else {
                                 Information.resize(Information.size() + 1);
-                                Information[Information.size() - 1].SecondFileName = SecondFile;
-                                Information[Information.size() - 1].FirstFileName = FirstFile;
+                                Information[Information.size() - 1].SecondFileName = consoleSecondFileName;
+                                Information[Information.size() - 1].FirstFileName = consoleFirstFileName;
                                 Information[Information.size() - 1].ComputerLabel = Information[i].ComputerLabel;
                                 Information[Information.size() - 1].NumberClass = Temp.substr(23, Temp.substr(23).find(" "));
                                 Information[Information.size() - 1].ComputerFubricNumber = Temp.substr(46);
@@ -382,7 +455,7 @@ void FindInfo(int element, string FirstFile, string SecondFile) { // Функция нах
     }
 }
 
-bool InfoInConsole(string FirstFile, string SecondFile) { // Функция обработки нажатия клавиш в меню
+bool InfoInConsole() { // Функция обработки нажатия клавиш в меню
     int selected = 0;
     bool running = true;
     while (running) {
@@ -399,26 +472,26 @@ bool InfoInConsole(string FirstFile, string SecondFile) { // Функция обработки н
                 selected = (selected + 1) % 5;     // Цикличная прокрутка вниз
                 break;
             case KEY_RIGHT:
-                FindInfo(selected + 1, FirstFile, SecondFile);
+                FindInfo(selected + 1);
                 break;
             }
         }
         // Обработка цифровых клавиш '1' - '5' 
         else if (key >= '1' && key <= '5') {
             if (key - '1' == 0) {
-                FindInfo(1, FirstFile, SecondFile);
+                FindInfo(1);
             }
             else if (key - '1' == 1) {
-                FindInfo(2, FirstFile, SecondFile);
+                FindInfo(2);
             }
             else if (key - '1' == 2) {
-                FindInfo(3, FirstFile, SecondFile);
+                FindInfo(3);
             }
             else if (key - '1' == 3) {
-                FindInfo(4, FirstFile, SecondFile);
+                FindInfo(4);
             }
             else if (key - '1' == 4) {
-                FindInfo(5, FirstFile, SecondFile);
+                FindInfo(5);
             }
         }
         // Выход на ESC
@@ -429,19 +502,19 @@ bool InfoInConsole(string FirstFile, string SecondFile) { // Функция обработки н
         // Обработка клавиши Enter
         else if (key == ENTER) {
             if (selected == 0) {
-                FindInfo(selected + 1, FirstFile, SecondFile);
+                FindInfo(selected + 1);
             }
             else if (selected == 1) {
-                FindInfo(selected + 1, FirstFile, SecondFile);
+                FindInfo(selected + 1);
             }
             else if (selected == 2) {
-                FindInfo(selected + 1, FirstFile, SecondFile);
+                FindInfo(selected + 1);
             }
             else if (selected == 3) {
-                FindInfo(selected + 1, FirstFile, SecondFile);
+                FindInfo(selected + 1);
             }
             else if (selected == 4) {
-                FindInfo(selected + 1, FirstFile, SecondFile);
+                FindInfo(selected + 1);
             }
         }
     }
