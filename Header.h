@@ -34,14 +34,14 @@ void Work();
 void DrawInfoFileMenu(int selectedItem, string FirstFile, string SecondFile, string ExitFile, string Status);
 void InfoInFile();
 void DrawInfoInConsoleMenu(int selectedItem);
-void FindInfo(int element, string FirstFile, string SecondFile);
+void FindInfo(int element);
 void CheckFileInFirstProgram(bool Start);
 void DrawAddFileMenu(int selectedItem);
 void DrawExitMenu(int selectedItem);
 void ChoiseFilesPath();
-void DrawChoiseFilesMenu(int selectedItem, string FirstFilePath, string SecondFilePath, string Permission);
+void DrawChoiseFilesMenu(int selectedItem, string Permission);
 
-bool InfoInConsole(string FirstFile, string SecondFile);
+bool InfoInConsole();
 bool CloseProgram();
 bool Start();
 bool AddFiles();
@@ -50,7 +50,7 @@ bool PerformActionWithFile(int itemIndex, string& FirstFile, string& SecondFile,
 bool PerformAction(int itemIndex);
 bool CreateAndWriteFile(string FirstFile, string SecondFile, string ExitFile);
 bool CreateFolder(std::string FolderNames);
-bool PerformActionChoisesFilesMenu(int itemIndex, string& FirstFile, string& SecondFile, string Permission);
+bool PerformActionChoisesFilesMenu(int itemIndex, string Permission);
 
 string GetDesktopPath();
 string TakePathToExeFile();
