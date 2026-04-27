@@ -31,7 +31,7 @@ struct FullString {
 
 void DrawMenu(int selectedItem);
 void Work();
-void DrawInfoFileMenu(int selectedItem, string FirstFile, string SecondFile, string ExitFile, string Status);
+void DrawInfoFileMenu(int selectedItem, string Status);
 void InfoInFile();
 void DrawInfoInConsoleMenu(int selectedItem);
 void FindInfo(int element);
@@ -46,9 +46,9 @@ bool CloseProgram();
 bool Start();
 bool AddFiles();
 bool AddFileMenu();
-bool PerformActionWithFile(int itemIndex, string& FirstFile, string& SecondFile, string& ExitFile);
+bool PerformActionWithFile(int itemIndex);
 bool PerformAction(int itemIndex);
-bool CreateAndWriteFile(string FirstFile, string SecondFile, string ExitFile);
+bool CreateAndWriteFile();
 bool CreateFolder(std::string FolderNames);
 bool PerformActionChoisesFilesMenu(int itemIndex, string Permission);
 

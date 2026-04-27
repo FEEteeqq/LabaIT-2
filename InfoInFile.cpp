@@ -1,5 +1,12 @@
 #include "Header.h"
 
+string fileFirstFilePath = "";
+string fileSecondFilePath = "";
+string fileFirstFileName = "Не выбран";
+string fileSecondFileName = "Не выбран";
+string fileExitFileName = "Имя файла не задано";
+
+
 string ExitFileName() { // Функция для написания имени выходного файла
     system("cls");
     cout << "Файл будет иметь расширение .txt" << endl;
@@ -69,102 +76,13 @@ string ExitFileName() { // Функция для написания имени выходного файла
     return NameFile;
 }
 
-string ChooseFile(string Path, bool OnlyName) { // Функция выбора файла через проводник
-    char path[MAX_PATH];
-    for (int i = 0; i < Path.size(); i++) {
-        path[i] = Path[i];
-    }
-    path[Path.size()] = '\0';
-    char filename[MAX_PATH];
-
-    OPENFILENAMEA ofn;// Объявление структуры, которая содержит параметры для диалогового окна "Открыть файл"
-    ZeroMemory(&filename, sizeof(filename));// Очистка (заполнение нулями) массива filename, чтобы в нем не было "мусора" перед использованием
-    ZeroMemory(&ofn, sizeof(ofn));// Очистка структуры ofn — это важно, чтобы все неиспользуемые поля были гарантированно обнулены
-    ofn.lStructSize = sizeof(ofn);// Указание размера структуры (Windows использует это для определения версии API)
-    ofn.hwndOwner = NULL;// Дескриптор окна-владельца (NULL означает, что у диалога нет родительского окна)
-    ofn.lpstrFilter = "Text Files\0*.txt\0"; // Фильтр типов файлов: в списке выбора будут отображаться только текстовые файлы (.txt) формат: "Название\0*.расширение\0"
-    ofn.lpstrFile = filename;// Указатель на буфер (массив), в который будет записан путь к выбранному файлу
-    ofn.nMaxFile = MAX_PATH;// Максимальный размер буфера под путь к файлу (обычно 260 символов)
-    ofn.lpstrTitle = "Выберете необходимый файл";// Заголовок, который будет отображаться в верхней части окна выбора файла
-    ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR; // Флаги поведения:
-    //OFN_DONTADDTORECENT — не добавлять выбранный файл в список "Недавние документы"
-    // OFN_FILEMUSTEXIST — пользователь может выбрать только реально существующий файл
-    // OFN_NOCHANGEDIR - возвращает рабочую директорию программы в исходное состояние после закрытия окна
-    ofn.lpstrInitialDir = path; // Начальная папка, которая откроется сразу при запуске диалога
-
-    if (GetOpenFileNameA(&ofn)) {
-        string FileName = filename;
-        if (OnlyName) {
-            return FileName.substr(FileName.find_last_of("/\\") + 1);
-        }
-        else {
-            return FileName;
-        }
-    }
-    else {
-        system("cls");
-        //Обработка ошибок и закрытия проводника без выбранного файла
-        switch (CommDlgExtendedError()) {
-        case CDERR_DIALOGFAILURE:
-            // Окно не смогло создаться
-            std::cout << "CDERR_DIALOGFAILURE\n"; break;
-        case CDERR_FINDRESFAILURE:
-            // Не удалось найти указанный шаблон (ресурс) окна в файле
-            std::cout << "CDERR_FINDRESFAILURE\n"; break;
-        case CDERR_LOADRESFAILURE:
-            // Ресурс найден, но произошла ошибка при его загрузке
-            std::cout << "CDERR_LOADRESFAILURE\n"; break;
-        case CDERR_LOADSTRFAILURE:
-            // Ошибка при попытке загрузить внутреннюю строку из ресурсов системы
-            std::cout << "CDERR_LOADSTRFAILURE\n"; break;
-        case CDERR_LOCKRESFAILURE:
-            // Не удалось заблокировать память для загруженного ресурса
-            std::cout << "CDERR_LOCKRESFAILURE\n"; break;
-        case CDERR_INITIALIZATION:
-            // Общая ошибка при попытке инициализировать диалог
-            std::cout << "CDERR_INITIALIZATION\n"; break;
-        case CDERR_MEMALLOCFAILURE:
-            // Недостаточно памяти для работы диалогового окна
-            std::cout << "CDERR_MEMALLOCFAILURE\n"; break;
-        case CDERR_MEMLOCKFAILURE:
-            // Ошибка при попытке заблокировать память для данных диалога
-            std::cout << "CDERR_MEMLOCKFAILURE\n"; break;
-        case CDERR_STRUCTSIZE:
-            // Неверно указан lStructSize (размер структуры не совпадает с ожидаемым)
-            std::cout << "CDERR_STRUCTSIZE\n"; break;
-        case CDERR_NOHINSTANCE:
-            // Указан флаг использования шаблона, но не передан hInstance приложения
-            std::cout << "CDERR_NOHINSTANCE\n"; break;
-        case CDERR_NOHOOK:
-            // Указан флаг использования Hook-функции, но указатель lpfnHook пуст
-            std::cout << "CDERR_NOHOOK\n"; break;
-        case CDERR_NOTEMPLATE:
-            // Указан флаг кастомного шаблона, но не передан сам шаблон lpTemplateName
-            std::cout << "CDERR_NOTEMPLATE\n"; break;
-        case FNERR_BUFFERTOOSMALL:
-            // Размер буфера lpstrFile слишком мал для выбранного пути (nMaxFile)
-            std::cout << "FNERR_BUFFERTOOSMALL\n"; break;
-        case FNERR_INVALIDFILENAME:
-            // Переданное имя файла содержит недопустимые символы или некорректно
-            std::cout << "FNERR_INVALIDFILENAME\n"; break;
-        case FNERR_SUBCLASSFAILURE:
-            // Не удалось подменить процедуру окна
-            std::cout << "FNERR_SUBCLASSFAILURE\n"; break;
-        default: std::cout << "Файл не был выбран\n";
-            cout << "Для возврата нажмите любую клавишу...";
-            _getch();
-        }
-    }
-    return "";
-}
-
-bool CreateAndWriteFile(string FirstFile, string SecondFile, string ExitFile) /* Функция для создания и заполнение (данными из выбранных файлов) выходного файла */ {
-    if ((FirstFile != "Не выбран" || SecondFile != "Не выбран") && ExitFile != "Название не задано") {
+bool CreateAndWriteFile() /* Функция для создания и заполнение (данными из выбранных файлов) выходного файла */ {
+    if ((fileFirstFileName != "Не выбран" || fileSecondFileName != "Не выбран") && fileExitFileName != "Имя файла не задано") {
         vector<FullString> Data;
-        if (FirstFile != "Не выбран") {
+        if (fileFirstFileName != "Не выбран") {
             std::string FirstPath = TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа\\"; // Путь к папке с файлами 1 типа
             int i = -1;
-            ifstream File(FirstPath + FirstFile);
+            ifstream File(fileFirstFilePath);
             if (File.is_open()) {
                 string Temp;
                 while (getline(File, Temp)) {
@@ -192,17 +110,17 @@ bool CreateAndWriteFile(string FirstFile, string SecondFile, string ExitFile) /*
             }
             else {
                 system("cls");
-                cout << "Файл не открылся" << endl;
+                cout << "Файл '" + fileFirstFileName +"' не открылся" << endl;
                 cout << "Для возврата в главное меню нажмите любую клавишу..." << endl;
                 _getch();
                 return false;
             }
         }
-        if (SecondFile != "Не выбран") {
+        if (fileSecondFileName != "Не выбран") {
             std::string SecondPath = TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа\\"; // Путь к папке с файлами 2 типа
             int i = Data.size() - 1;
             int j = Data.size() - 1;
-            ifstream File(SecondPath + SecondFile);
+            ifstream File(fileSecondFilePath);
             if (File.is_open()) {
                 string Temp;
                 while (getline(File, Temp)) {
@@ -244,22 +162,23 @@ bool CreateAndWriteFile(string FirstFile, string SecondFile, string ExitFile) /*
             }
             else {
                 system("cls");
-                cout << "Файл не открылся" << endl;
+                cout << "Файл '" + fileSecondFileName + "' не открылся" << endl;
                 cout << "Для возврата в главное меню нажмите любую клавишу..." << endl;
                 _getch();
                 return false;
             }
         }
-        ofstream File(TakePathToExeFile() + "\\LabaIT 2\\Выходные файлы\\" + ExitFile);
+        ofstream File(TakePathToExeFile() + "\\LabaIT 2\\Выходные файлы\\" + fileExitFileName);
         File << "Марка ЭВМ             Номера кафедры       Заводской номер ЭВМ    Количество терминалов    Количество внешних запоминающих устройств" << endl;
         for (int i = 0; i < Data.size(); i++) {
             File << Data[i].ComputerLabel << Data[i].NumberClass << Data[i].ComputerFubricNumber << Data[i].NumbersTerminal << Data[i].NumbersVneshUstroystv << endl;
         }
         File.close();
         system("cls");
-        cout << "Файл успешно создан и заполнен" << endl;
+        cout << "Файл '" + fileExitFileName +"' успешно создан и заполнен" << endl;
         cout << "Для возврата в главное меню нажмите любую клавишу..." << endl;
         _getch();
+        fileExitFileName = "Имя файла не задано";
         return false;
     }
     else {
@@ -267,9 +186,9 @@ bool CreateAndWriteFile(string FirstFile, string SecondFile, string ExitFile) /*
     }
 }
 
-void DrawInfoFileMenu(int selectedItem, string FirstFile, string SecondFile, string ExitFile, string Status) {
+void DrawInfoFileMenu(int selectedItem, string Status) {
     // Функция отрисовки МЕНЮ ВЫВОДА ДАННЫХ В ФАЙЛ
-    vector<string> menuItems = { "1. Файл первого типа: " + FirstFile, "2. Файл второго типа: " + SecondFile, "3. Выходной файл: " + ExitFile, "4. Создать и заполнить файл" + Status };
+    vector<string> menuItems = { "1. Файл первого типа: " + fileFirstFileName, "2. Файл второго типа: " + fileSecondFileName, "3. Выходной файл: " + fileExitFileName, "4. Создать и заполнить файл" + Status };
     system("cls");
     cout << "   ---- МЕНЮ ВЫВОДА ДАННЫХ В ФАЙЛ ----" << endl << endl;
     cout << "Необходимо выбрать хотя-бы один файл и обязательно задать имя выходного файла" << endl << endl;
@@ -284,36 +203,110 @@ void DrawInfoFileMenu(int selectedItem, string FirstFile, string SecondFile, str
     cout << endl << "Для возврата в главное меню нажмите клавишу ESC" << endl;
 }
 
-bool PerformActionWithFile(int itemIndex, string& FirstFile, string& SecondFile, string& ExitFile) {
+bool PerformActionWithFile(int itemIndex) {
     // Функция обработки выбранного пункта меню вывода данных в файл
     system("cls");
     switch (itemIndex) {
     case 0:
-        FirstFile = ChooseFile(TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа", true);
-        if (FirstFile.empty()) {
-            FirstFile = "Не выбран";
+        fileFirstFilePath = ChooseFile(TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 1 типа", false);
+        if (fileFirstFilePath.empty()) {
+            fileFirstFileName = "Не выбран";
+        }
+        else {
+            ifstream File(fileFirstFilePath);
+            string Temp;
+            int i = 0;
+            while (getline(File, Temp)) {
+                if (i == 0) {
+                    if (Temp != "Марка ЭВМ              Номера кафедры         Заводской номер ЭВМ") {
+                        system("cls");
+                        cout << "Выбранный файл не является файлом первого типа, необходимо выбрать другой файл" << endl;
+                        cout << "Для продолжения нажмите любую клавишу..." << endl;
+                        _getch();
+                        File.close();
+                        fileFirstFilePath = "";
+                        fileFirstFileName = "Не выбран";
+                        break;
+                    }
+                }
+                if (!Temp.empty()) {
+                    i++;
+                }
+                else {
+                    system("cls");
+                    cout << "Выбранный файл пустой, необходимо выбрать другой файл" << endl;
+                    cout << "Для продолжения нажмите любую клавишу..." << endl;
+                    _getch();
+                    File.close();
+                    fileFirstFilePath = "";
+                    fileFirstFileName = "Не выбран";
+                    break;
+                }
+                if (i > 1) {
+                    fileFirstFileName = fileFirstFilePath.substr(fileFirstFilePath.find_last_of("/\\") + 1);
+                    File.close();
+                    break;
+                }
+            }
         }
         return true;
         break;
     case 1:
-        SecondFile = ChooseFile(TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа", true);
-        if (SecondFile.empty()) {
-            SecondFile = "Не выбран";
+        fileSecondFilePath = ChooseFile(TakePathToExeFile() + "\\LabaIT 2\\Входные файлы\\Файлы 2 типа", false);
+        if (fileSecondFilePath.empty()) {
+            fileSecondFileName = "Не выбран";
+        }
+        else {
+            ifstream File(fileSecondFilePath);
+            string Temp;
+            int i = 0;
+            while (getline(File, Temp)) {
+                if (i == 0) {
+                    if (Temp != "Марка ЭВМ              Количество терминалов      Количество внешних запоминающих устройств") {
+                        system("cls");
+                        cout << "Выбранный файл не является файлом второго типа, необходимо выбрать другой файл" << endl;
+                        cout << "Для продолжения нажмите любую клавишу..." << endl;
+                        _getch();
+                        File.close();
+                        fileSecondFilePath = "";
+                        fileSecondFileName = "Не выбран";
+                        break;
+                    }
+                }
+                if (!Temp.empty()) {
+                    i++;
+                }
+                else {
+                    system("cls");
+                    cout << "Выбранный файл пустой, необходимо выбрать другой файл" << endl;
+                    cout << "Для продолжения нажмите любую клавишу..." << endl;
+                    _getch();
+                    File.close();
+                    fileSecondFilePath = "";
+                    fileSecondFileName = "Не выбран";
+                    break;
+                }
+                if (i > 1) {
+                    fileSecondFileName = fileSecondFilePath.substr(fileSecondFilePath.find_last_of("/\\") + 1);
+                    File.close();
+                    break;
+                }
+            }
         }
         return true;
         break;
     case 2:
-        ExitFile = ExitFileName();
-        if (ExitFile.empty()) {
-            ExitFile = "Название не задано";
+        fileExitFileName = ExitFileName();
+        if (fileExitFileName.empty()) {
+            fileExitFileName = "Имя файла не задано";
         }
         else {
-            ExitFile += ".txt";
+            fileExitFileName += ".txt";
         }
         return true;
         break;
     case 3:
-        return CreateAndWriteFile(FirstFile, SecondFile, ExitFile);
+        return CreateAndWriteFile();
         break;
     }
 }
@@ -322,18 +315,15 @@ void InfoInFile() { // Функция обработки клавиш в меню вывода данных в файл
     system("cls");
     int selected = 0;
     bool running = true;
-    string FirstFile = "Не выбран";
-    string SecondFile = "Не выбран";
-    string ExitFile = "Название не задано";
     string Status = " (Недоступно)";
     while (running) {
-        if ((FirstFile != "Не выбран" || SecondFile != "Не выбран") && ExitFile != "Название не задано") {
+        if ((fileFirstFileName != "Не выбран" || fileSecondFileName != "Не выбран") && fileExitFileName != "Имя файла не задано") {
             Status = " ( Доступно )";
         }
         else {
             Status = " ( Недоступно )";
         }
-        DrawInfoFileMenu(selected, FirstFile, SecondFile, ExitFile, Status);
+        DrawInfoFileMenu(selected, Status);
         int key = _getch();
         // Обработка специальных клавиш (стрелки)
         if (key == 0 || key == 224) {
@@ -346,13 +336,13 @@ void InfoInFile() { // Функция обработки клавиш в меню вывода данных в файл
                 selected = (selected + 1) % 4;     // Цикличная прокрутка вниз
                 break;
             case KEY_RIGHT:
-                running = PerformActionWithFile(selected, FirstFile, SecondFile, ExitFile);
+                running = PerformActionWithFile(selected);
                 break;
             }
         }
         // Обработка цифровых клавиш '1' - '4' 
         else if (key >= '1' && key <= '4') {
-            running = PerformActionWithFile(key - '1', FirstFile, SecondFile, ExitFile);
+            running = PerformActionWithFile(key - '1');
         }
         // Выход на ESC
         else if (key == ESC) {
@@ -360,7 +350,7 @@ void InfoInFile() { // Функция обработки клавиш в меню вывода данных в файл
         }
         // Обработка клавиши Enter
         else if (key == ENTER) {
-            running = PerformActionWithFile(selected, FirstFile, SecondFile, ExitFile);
+            running = PerformActionWithFile(selected);
         }
     }
 }

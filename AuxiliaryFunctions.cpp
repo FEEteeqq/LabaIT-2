@@ -39,6 +39,95 @@ bool CreateFolder(std::string FolderNames) { // Функция создания новой папки
     }
 }
 
+string ChooseFile(string Path, bool OnlyName) { // Функция выбора файла через проводник
+    char path[MAX_PATH];
+    for (int i = 0; i < Path.size(); i++) {
+        path[i] = Path[i];
+    }
+    path[Path.size()] = '\0';
+    char filename[MAX_PATH];
+
+    OPENFILENAMEA ofn;// Объявление структуры, которая содержит параметры для диалогового окна "Открыть файл"
+    ZeroMemory(&filename, sizeof(filename));// Очистка (заполнение нулями) массива filename, чтобы в нем не было "мусора" перед использованием
+    ZeroMemory(&ofn, sizeof(ofn));// Очистка структуры ofn — это важно, чтобы все неиспользуемые поля были гарантированно обнулены
+    ofn.lStructSize = sizeof(ofn);// Указание размера структуры (Windows использует это для определения версии API)
+    ofn.hwndOwner = NULL;// Дескриптор окна-владельца (NULL означает, что у диалога нет родительского окна)
+    ofn.lpstrFilter = "Text Files\0*.txt\0"; // Фильтр типов файлов: в списке выбора будут отображаться только текстовые файлы (.txt) формат: "Название\0*.расширение\0"
+    ofn.lpstrFile = filename;// Указатель на буфер (массив), в который будет записан путь к выбранному файлу
+    ofn.nMaxFile = MAX_PATH;// Максимальный размер буфера под путь к файлу (обычно 260 символов)
+    ofn.lpstrTitle = "Выберете необходимый файл";// Заголовок, который будет отображаться в верхней части окна выбора файла
+    ofn.Flags = OFN_DONTADDTORECENT | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR; // Флаги поведения:
+    //OFN_DONTADDTORECENT — не добавлять выбранный файл в список "Недавние документы"
+    // OFN_FILEMUSTEXIST — пользователь может выбрать только реально существующий файл
+    // OFN_NOCHANGEDIR - возвращает рабочую директорию программы в исходное состояние после закрытия окна
+    ofn.lpstrInitialDir = path; // Начальная папка, которая откроется сразу при запуске диалога
+
+    if (GetOpenFileNameA(&ofn)) {
+        string FileName = filename;
+        if (OnlyName) {
+            return FileName.substr(FileName.find_last_of("/\\") + 1);
+        }
+        else {
+            return FileName;
+        }
+    }
+    else {
+        system("cls");
+        //Обработка ошибок и закрытия проводника без выбранного файла
+        switch (CommDlgExtendedError()) {
+        case CDERR_DIALOGFAILURE:
+            // Окно не смогло создаться
+            std::cout << "CDERR_DIALOGFAILURE\n"; break;
+        case CDERR_FINDRESFAILURE:
+            // Не удалось найти указанный шаблон (ресурс) окна в файле
+            std::cout << "CDERR_FINDRESFAILURE\n"; break;
+        case CDERR_LOADRESFAILURE:
+            // Ресурс найден, но произошла ошибка при его загрузке
+            std::cout << "CDERR_LOADRESFAILURE\n"; break;
+        case CDERR_LOADSTRFAILURE:
+            // Ошибка при попытке загрузить внутреннюю строку из ресурсов системы
+            std::cout << "CDERR_LOADSTRFAILURE\n"; break;
+        case CDERR_LOCKRESFAILURE:
+            // Не удалось заблокировать память для загруженного ресурса
+            std::cout << "CDERR_LOCKRESFAILURE\n"; break;
+        case CDERR_INITIALIZATION:
+            // Общая ошибка при попытке инициализировать диалог
+            std::cout << "CDERR_INITIALIZATION\n"; break;
+        case CDERR_MEMALLOCFAILURE:
+            // Недостаточно памяти для работы диалогового окна
+            std::cout << "CDERR_MEMALLOCFAILURE\n"; break;
+        case CDERR_MEMLOCKFAILURE:
+            // Ошибка при попытке заблокировать память для данных диалога
+            std::cout << "CDERR_MEMLOCKFAILURE\n"; break;
+        case CDERR_STRUCTSIZE:
+            // Неверно указан lStructSize (размер структуры не совпадает с ожидаемым)
+            std::cout << "CDERR_STRUCTSIZE\n"; break;
+        case CDERR_NOHINSTANCE:
+            // Указан флаг использования шаблона, но не передан hInstance приложения
+            std::cout << "CDERR_NOHINSTANCE\n"; break;
+        case CDERR_NOHOOK:
+            // Указан флаг использования Hook-функции, но указатель lpfnHook пуст
+            std::cout << "CDERR_NOHOOK\n"; break;
+        case CDERR_NOTEMPLATE:
+            // Указан флаг кастомного шаблона, но не передан сам шаблон lpTemplateName
+            std::cout << "CDERR_NOTEMPLATE\n"; break;
+        case FNERR_BUFFERTOOSMALL:
+            // Размер буфера lpstrFile слишком мал для выбранного пути (nMaxFile)
+            std::cout << "FNERR_BUFFERTOOSMALL\n"; break;
+        case FNERR_INVALIDFILENAME:
+            // Переданное имя файла содержит недопустимые символы или некорректно
+            std::cout << "FNERR_INVALIDFILENAME\n"; break;
+        case FNERR_SUBCLASSFAILURE:
+            // Не удалось подменить процедуру окна
+            std::cout << "FNERR_SUBCLASSFAILURE\n"; break;
+        default: std::cout << "Файл не был выбран\n";
+            cout << "Для возврата нажмите любую клавишу...";
+            _getch();
+        }
+    }
+    return "";
+}
+
 void CheckFileInFirstProgram(bool Start) {
     // Функция проверки существования папки первой программы 
     // и в случае её существования происходит копирование файлов в новую программу
