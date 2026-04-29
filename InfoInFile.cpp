@@ -32,53 +32,42 @@ string ExitFileName() { // Функция для написания имени выходного файла
                 return ExitFileName();
             }
         }
-        // Проверка есть ли в названии файла расширение, если есть то удаляем его
-        else if (NameFile.size() > 3 && NameFile.substr(NameFile.size() - 4, 4) == ".txt") {
-            NameFile.erase(NameFile.size() - 4, 4);
-        }
-        // Проверка размера имени файла
-        else if (NameFile.size() > 40) {
-            system("cls");
-            cout << "Ошибка! Файл должен содержать не больше 40 символов, необходимо изменить имя файла" << endl;
-            cout << "Для возврата в меню нажмите ESC, для повторного ввода нажмите любую другую клавишу" << endl;
-            NameFile.clear();
-            int Key;
-            Key = _getch();
-            if (Key == ESC) {}
-            else {
-                return ExitFileName();
-            }
-        }
-        // Проверка на запрещённые символы
-        else if (NameFile.find_first_of("\\|/:*?<>\"")) {
-            system("cls");
-            cout << "Ошибка! Файл содержит запрещённые символы, необходимо изменить имя файла" << endl;
-            cout << "Для возврата в меню нажмите ESC, для повторного ввода нажмите любую другую клавишу" << endl;
-            NameFile.clear();
-            int Key;
-            Key = _getch();
-            if (Key == ESC) {}
-            else {
-                return ExitFileName();
-            }
-        }
         else {
-            // Проверка на существование файла с таким именем
-            ifstream Test(TakePathToExeFile() + "\\LabaIT 2\\Выходные файлы\\" + NameFile + ".txt");
-            if (Test.is_open()) {
+            // Проверка есть ли в названии файла расширение, если есть то удаляем его
+            if (NameFile.size() > 3 && NameFile.substr(NameFile.size() - 4, 4) == ".txt") {
+                NameFile.erase(NameFile.size() - 4, 4);
+            }
+            // Проверка размера имени файла
+            if (NameFile.size() > 40) {
                 system("cls");
-                cout << "Файл с таким именем уже существует." << endl << "Для изменения имени файла нажмите ESC" << endl;
-                cout << "Для перезаписывания файла нажмите клавишу Enter" << endl;
-                bool Runnign = true;
-                while (Runnign) {
-                    int Key;
-                    Key = _getch();
-                    if (Key == ESC) {
-                        NameFile = ExitFileName();
-                        Runnign = false;
-                    }
-                    else if (Key == ENTER) {
-                        Runnign = false;
+                cout << "Ошибка! Файл должен содержать не больше 40 символов, необходимо изменить имя файла" << endl;
+                cout << "Для возврата в меню нажмите ESC, для повторного ввода нажмите любую другую клавишу" << endl;
+                NameFile.clear();
+                int Key;
+                Key = _getch();
+                if (Key == ESC) {}
+                else {
+                    return ExitFileName();
+                }
+            }
+            else {
+                // Проверка на существование файла с таким именем
+                ifstream Test(TakePathToExeFile() + "\\LabaIT 2\\Выходные файлы\\" + NameFile + ".txt");
+                if (Test.is_open()) {
+                    system("cls");
+                    cout << "Файл с таким именем уже существует." << endl << "Для изменения имени файла нажмите ESC" << endl;
+                    cout << "Для перезаписывания файла нажмите клавишу Enter" << endl;
+                    bool Runnign = true;
+                    while (Runnign) {
+                        int Key;
+                        Key = _getch();
+                        if (Key == ESC) {
+                            NameFile = ExitFileName();
+                            Runnign = false;
+                        }
+                        else if (Key == ENTER) {
+                            Runnign = false;
+                        }
                     }
                 }
             }
