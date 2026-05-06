@@ -226,7 +226,7 @@ void FindInfo(int element) { // Функция нахождения информации для вывода в консо
                     switch (element) {
                     case 1: // Поиск по марке ЭВМ 1 тип файла
                         if (!Temp.empty() && Temp.find(TemporaryData) < 23) {
-                            if (Temp.substr(Temp.substr(0, 23).find(TemporaryData), TemporaryData.size()) == TemporaryData) {
+                            if (/*Temp.substr(Temp.substr(0, 23).find(TemporaryData), TemporaryData.size()) == TemporaryData*/Temp.find(TemporaryData) == 0) {
                                 Information.resize(Information.size() + 1);
                                 Information[i].FirstFileName = consoleFirstFileName;
                                 Information[i].SecondFileName = "---";
@@ -255,8 +255,8 @@ void FindInfo(int element) { // Функция нахождения информации для вывода в консо
                         }
                         break;
                     case 3: // Поиск по заводскому номеру ЭВМ
-                        if (!Temp.empty() && (Temp.substr(46).find(TemporaryData) + 46) >= 46 && (Temp.substr(46).find(TemporaryData) + 46) < 66) {
-                            if (Temp.substr(Temp.substr(46).find(TemporaryData) + 46, TemporaryData.size()) == TemporaryData) {
+                        if (!Temp.empty() && (Temp.substr(46).find(TemporaryData)) >= 0 && (Temp.substr(46).find(TemporaryData)) < 20) {
+                            if (/*Temp.substr(Temp.substr(46).find(TemporaryData) + 46, TemporaryData.size()) == TemporaryData*/Temp.substr(46).find(TemporaryData) == 0) {
                                 Information.resize(Information.size() + 1);
                                 Information[i].FirstFileName = consoleFirstFileName;
                                 Information[i].SecondFileName = "---";
@@ -292,8 +292,8 @@ void FindInfo(int element) { // Функция нахождения информации для вывода в консо
                             Flag = false;
                         }
                     }
-                    if (element == 1 && Flag) { // Поиск по марке ЭВМ 2 тип файла
-                        if (!Temp.empty() && Temp.find(TemporaryData) < 23) {
+                    if (element == 1 && Flag) { // Поиск по марке ЭВМ в файле 2 типа
+                        if (/*!Temp.empty() && Temp.find(TemporaryData) < 23*/Temp.find(TemporaryData) == 0) {
                             int i = Information.size();
                             Information.resize(Information.size() + 1);
                             Information[i].SecondFileName = consoleSecondFileName;
